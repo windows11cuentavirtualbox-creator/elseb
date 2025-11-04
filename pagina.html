@@ -28,6 +28,51 @@
       .sidebar.hidden {
         display: none;
       }
+      .theme-toggle {
+        position: fixed;
+        right: 100px;
+        top: 30px;
+        background: rgba(255,255,255,0.1);
+        color: white;
+        border: 2px solid rgba(255,255,255,0.3);
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        cursor: pointer;
+        font-size: 24px;
+        z-index: 101;
+        backdrop-filter: blur(10px);
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .theme-toggle:hover {
+        background: rgba(255,255,255,0.2);
+        transform: scale(1.1);
+        box-shadow: 0 0 20px rgba(255,255,255,0.5);
+      }
+      .surprise-btn {
+        position: fixed;
+        left: 30px;
+        bottom: 30px;
+        background: linear-gradient(45deg, #ff00ff, #00ffff);
+        color: white;
+        border: none;
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        cursor: pointer;
+        font-size: 24px;
+        z-index: 101;
+        box-shadow: 0 0 20px rgba(255,0,255,0.5);
+        transition: all 0.3s ease;
+        animation: pulse 2s infinite;
+      }
+      .surprise-btn:hover {
+        transform: scale(1.2);
+        box-shadow: 0 0 30px rgba(255,0,255,0.8);
+      }
       .floating-icons {
         position: absolute;
         top: 0;
@@ -196,10 +241,10 @@
       margin-bottom: 40px;
     }
     .game-card {
-      background: rgba(10,10,10,0.9);
+      background: rgba(10,10,10,0.95);
       border-radius: 20px;
       overflow: hidden;
-      box-shadow: 0 10px 40px rgba(255,0,255,0.3);
+      box-shadow: 0 10px 40px rgba(255,0,255,0.3), inset 0 0 0 1px rgba(255,0,255,0.2);
       transition: all 0.4s ease;
       backdrop-filter: blur(10px);
       border: 2px solid rgba(255,0,255,0.5);
@@ -219,7 +264,7 @@
     }
     .game-card:hover {
       transform: translateY(-8px) scale(1.02);
-      box-shadow: 0 20px 60px rgba(255,0,255,0.5);
+      box-shadow: 0 20px 60px rgba(255,0,255,0.5), 0 0 20px rgba(0,255,255,0.4);
       border-color: rgba(0,255,255,0.8);
     }
     .game-card:hover::before {
@@ -251,14 +296,15 @@
     }
     .game-content h3 {
       margin: 0 0 12px;
-      color: #007bff;
+      color: #00ffff;
       font-size: 1.3em;
       font-weight: 600;
+      text-shadow: 0 0 10px rgba(0,255,255,0.5);
     }
     .game-content p {
       margin: 0 0 18px;
       line-height: 1.6;
-      color: #555;
+      color: #e0e0e0;
     }
     .game-meta {
       display: flex;
@@ -754,6 +800,14 @@
         </div>
         <button class="carousel-btn prev" onclick="moveCarousel(-1)">&#10094;</button>
         <button class="carousel-btn next" onclick="moveCarousel(1)">&#10095;</button>
+      </div>
+    </div>
+
+    <!-- Sección de Trending Now -->
+    <div class="trending-section">
+      <h2><i class="fas fa-fire"></i> Trending Now</h2>
+      <div class="trending-grid" id="trendingGrid">
+        <!-- Juegos trending se cargarán aquí -->
       </div>
     </div>
 
@@ -1301,8 +1355,573 @@
         developer: 'Mega Crit',
         players: '1',
         rating: 4.7,
-        details: 'Slay the Spire es un juego de cartas donde construyes mazos para derrotar jefes en un roguelike estratégico.'
-      }
+        details: 'Slay the Spire es un juego de cartas donde construyes mazos para derrotar jefes en un roguelike estratégico.',
+        requirements: {
+          minimum: 'OS: Windows 7, Processor: Intel Core 2 Duo, Memory: 2 GB RAM, Graphics: DirectX 10 compatible',
+          recommended: 'OS: Windows 10, Processor: Intel Core i5, Memory: 4 GB RAM, Graphics: DirectX 11 compatible'
+        }
+      },
+      {
+        id: 35,
+        title: 'Elden Ring',
+        category: 'action',
+        image: 'https://images.unsplash.com/photo-1552820728-8b83bb6b773f?w=400',
+        description: 'RPG de acción con mundo abierto y combate desafiante.',
+        releaseYear: 2022,
+        developer: 'FromSoftware',
+        players: '1',
+        rating: 4.8,
+        details: 'Elden Ring combina la exploración de mundo abierto con el combate souls-like de FromSoftware, ambientado en las Tierras Intermedias.',
+        requirements: {
+          minimum: 'OS: Windows 10, Processor: INTEL CORE I5-8400 or AMD RYZEN 3 3300X, Memory: 12 GB RAM, Graphics: NVIDIA GEFORCE GTX 1060 3 GB or AMD RADEON RX 580 4 GB',
+          recommended: 'OS: Windows 10/11, Processor: INTEL CORE I7-8700K or AMD RYZEN 5 3600X, Memory: 16 GB RAM, Graphics: NVIDIA GEFORCE GTX 1070 8 GB or AMD RADEON RX VEGA 56 8 GB'
+        }
+      },
+      {
+        id: 36,
+        title: 'God of War Ragnarök',
+        category: 'action',
+        image: 'https://images.unsplash.com/photo-1614680376739-414d95ff43df?w=400',
+        description: 'Aventura épica con mitología nórdica.',
+        releaseYear: 2022,
+        developer: 'Santa Monica Studio',
+        players: '1',
+        rating: 4.9,
+        details: 'La secuela de God of War (2018), donde Kratos y Atreus viajan a los reinos nórdicos enfrentando dioses y criaturas míticas.',
+        requirements: {
+          minimum: 'OS: PlayStation 4, Processor: Custom AMD Jaguar, Memory: 8 GB RAM, Graphics: Custom AMD Radeon',
+          recommended: 'OS: PlayStation 5, Processor: Custom AMD Zen 2, Memory: 16 GB RAM, Graphics: Custom AMD RDNA 2'
+        }
+      },
+      {
+        id: 37,
+        title: 'Resident Evil Village',
+        category: 'action',
+        image: 'https://images.unsplash.com/photo-1552820728-8b83bb6b773f?w=400',
+        description: 'Survival horror con vampiros y licántropos.',
+        releaseYear: 2021,
+        developer: 'Capcom',
+        players: '1',
+        rating: 4.6,
+        details: 'Ethan Winters busca a su hija secuestrada en una aldea europea infestada de horrores, con mecánicas de supervivencia y combate.',
+        requirements: {
+          minimum: 'OS: Windows 10 (64-bit), Processor: Intel Core i5-7500 or AMD Ryzen 3 1200, Memory: 8 GB RAM, Graphics: NVIDIA GeForce GTX 1050 Ti or AMD Radeon RX 560',
+          recommended: 'OS: Windows 10 (64-bit), Processor: Intel Core i7-8700 or AMD Ryzen 5 3600, Memory: 16 GB RAM, Graphics: NVIDIA GeForce GTX 1070 or AMD Radeon RX 5700'
+        }
+      },
+      {
+        id: 38,
+        title: 'Horizon Zero Dawn',
+        category: 'action',
+        image: 'https://images.unsplash.com/photo-1614680376739-414d95ff43df?w=400',
+        description: 'Mundo postapocalíptico con máquinas y tribus.',
+        releaseYear: 2017,
+        developer: 'Guerrilla Games',
+        players: '1',
+        rating: 4.7,
+        details: 'Aloy explora un mundo dominado por máquinas inteligentes, cazando y descubriendo el pasado de la humanidad.',
+        requirements: {
+          minimum: 'OS: PlayStation 4, Processor: Custom AMD Jaguar, Memory: 8 GB RAM, Graphics: Custom AMD Radeon',
+          recommended: 'OS: PlayStation 4 Pro, Processor: Custom AMD Jaguar, Memory: 8 GB RAM, Graphics: Custom AMD Radeon'
+        }
+      },
+      {
+        id: 39,
+        title: 'The Last of Us Part II',
+        category: 'action',
+        image: 'https://images.unsplash.com/photo-1552820728-8b83bb6b773f?w=400',
+        description: 'Historia emocional de venganza y supervivencia.',
+        releaseYear: 2020,
+        developer: 'Naughty Dog',
+        players: '1',
+        rating: 4.8,
+        details: 'Ellie busca venganza contra aquellos que destruyeron su vida, en un mundo postapocalíptico lleno de infectados.',
+        requirements: {
+          minimum: 'OS: PlayStation 4, Processor: Custom AMD Jaguar, Memory: 8 GB RAM, Graphics: Custom AMD Radeon',
+          recommended: 'OS: PlayStation 4 Pro, Processor: Custom AMD Jaguar, Memory: 8 GB RAM, Graphics: Custom AMD Radeon'
+        }
+      },
+      {
+        id: 40,
+        title: 'Baldur\'s Gate 3',
+        category: 'rpg',
+        image: 'https://images.unsplash.com/photo-1614680376739-414d95ff43df?w=400',
+        description: 'RPG basado en Dungeons & Dragons con turnos estratégicos.',
+        releaseYear: 2023,
+        developer: 'Larian Studios',
+        players: '1-4',
+        rating: 4.9,
+        details: 'Un RPG táctico basado en D&D 5e, donde creas tu personaje y tomas decisiones que afectan la historia.',
+        requirements: {
+          minimum: 'OS: Windows 10 64-bit, Processor: Intel I5-4690 / AMD FX 8350, Memory: 8 GB RAM, Graphics: Nvidia GTX 970 / AMD RX 480',
+          recommended: 'OS: Windows 10 64-bit, Processor: Intel I7-8700K / AMD Ryzen 5 3600, Memory: 16 GB RAM, Graphics: Nvidia RTX 2060 Super / AMD RX 5700 XT'
+        }
+      },
+      {
+        id: 41,
+        title: 'Starfield',
+        category: 'rpg',
+        image: 'https://images.unsplash.com/photo-1552820728-8b83bb6b773f?w=400',
+        description: 'Exploración espacial en un universo masivo.',
+        releaseYear: 2023,
+        developer: 'Bethesda Game Studios',
+        players: '1',
+        rating: 4.2,
+        details: 'Explora el universo, coloniza planetas y vive aventuras en el primer RPG espacial de Bethesda.',
+        requirements: {
+          minimum: 'OS: Windows 10 version 21H1 (10.0.19043), Processor: AMD Ryzen 5 2600X or Intel Core i7-6800K, Memory: 16 GB RAM, Graphics: AMD Radeon RX 6600 XT or NVIDIA GeForce RTX 3060',
+          recommended: 'OS: Windows 10 version 21H1 (10.0.19043), Processor: AMD Ryzen 5 3600X or Intel Core i5-10600K, Memory: 16 GB RAM, Graphics: AMD Radeon RX 6800 or NVIDIA GeForce RTX 3070'
+        }
+      },
+      {
+        id: 42,
+        title: 'Diablo IV',
+        category: 'rpg',
+        image: 'https://images.unsplash.com/photo-1614680376739-414d95ff43df?w=400',
+        description: 'Hack and slash con demonios y clases variadas.',
+        releaseYear: 2023,
+        developer: 'Blizzard Entertainment',
+        players: '1',
+        rating: 4.5,
+        details: 'Lucha contra las fuerzas del infierno en Sanctuary, con clases como Bárbaro, Hechicero y Druida.',
+        requirements: {
+          minimum: 'OS: Windows 10 64-Bit, Processor: Intel Core i5-3450 or AMD FX 8300, Memory: 8 GB RAM, Graphics: NVIDIA GeForce GTX 660 or AMD Radeon R9 280',
+          recommended: 'OS: Windows 10 64-Bit, Processor: Intel Core i5-8400 or AMD Ryzen 5 2600, Memory: 16 GB RAM, Graphics: NVIDIA GeForce GTX 1060 or AMD Radeon RX 580'
+        }
+      },
+      {
+        id: 43,
+        title: 'Hogwarts Legacy',
+        category: 'rpg',
+        image: 'https://images.unsplash.com/photo-1552820728-8b83bb6b773f?w=400',
+        description: 'Aventura mágica en Hogwarts.',
+        releaseYear: 2023,
+        developer: 'Avalanche Software',
+        players: '1',
+        rating: 4.4,
+        details: 'Vive como un estudiante de Hogwarts en los años 1800, aprendiendo magia y explorando el castillo.',
+        requirements: {
+          minimum: 'OS: Windows 10 (64-bit), Processor: Intel Core i5-6600 or AMD Ryzen 5 1400, Memory: 16 GB RAM, Graphics: NVIDIA GeForce GTX 960 or AMD Radeon RX 470',
+          recommended: 'OS: Windows 10 (64-bit), Processor: Intel Core i7-8700 or AMD Ryzen 5 3600, Memory: 16 GB RAM, Graphics: NVIDIA GeForce RTX 2060 or AMD Radeon RX 5600 XT'
+        }
+      },
+      {
+        id: 44,
+        title: 'Alan Wake 2',
+        category: 'action',
+        image: 'https://images.unsplash.com/photo-1614680376739-414d95ff43df?w=400',
+        description: 'Terror psicológico con narrativa ramificada.',
+        releaseYear: 2023,
+        developer: 'Remedy Entertainment',
+        players: '1',
+        rating: 4.6,
+        details: 'Alan Wake regresa en una historia de terror donde la realidad y la ficción se entremezclan.',
+        requirements: {
+          minimum: 'OS: Windows 10 (64-bit), Processor: Intel Core i5-7600K or AMD Ryzen 3 3300X, Memory: 16 GB RAM, Graphics: NVIDIA GeForce GTX 1060 or AMD Radeon RX 580',
+          recommended: 'OS: Windows 10 (64-bit), Processor: Intel Core i7-8700K or AMD Ryzen 5 3600X, Memory: 16 GB RAM, Graphics: NVIDIA GeForce RTX 3070 or AMD Radeon RX 6700 XT'
+        }
+      },
+      {
+        id: 45,
+        title: 'Marvel\'s Spider-Man 2',
+        category: 'action',
+        image: 'https://images.unsplash.com/photo-1552820728-8b83bb6b773f?w=400',
+        description: 'Aventura de superhéroe con Peter y Miles.',
+        releaseYear: 2023,
+        developer: 'Insomniac Games',
+        players: '1',
+        rating: 4.7,
+        details: 'Peter Parker y Miles Morales unen fuerzas para enfrentar nuevas amenazas en Nueva York.',
+        requirements: {
+          minimum: 'OS: PlayStation 5, Processor: Custom AMD Zen 2, Memory: 16 GB RAM, Graphics: Custom AMD RDNA 2',
+          recommended: 'OS: PlayStation 5, Processor: Custom AMD Zen 2, Memory: 16 GB RAM, Graphics: Custom AMD RDNA 2'
+        }
+      },
+      {
+        id: 46,
+        title: 'Street Fighter 6',
+        category: 'action',
+        image: 'https://images.unsplash.com/photo-1511512578047-dfb367046420?w=400',
+        description: 'Fighting game con mecánicas modernas.',
+        releaseYear: 2023,
+        developer: 'Capcom',
+        players: '1-2',
+        rating: 4.5,
+        details: 'La nueva entrega de Street Fighter con nuevos personajes, modos de juego y mecánicas de pelea.',
+        requirements: {
+          minimum: 'OS: Windows 10 (64-bit), Processor: Intel Core i5-7500 or AMD Ryzen 3 1200, Memory: 8 GB RAM, Graphics: NVIDIA GeForce GTX 960 or AMD Radeon RX 470',
+          recommended: 'OS: Windows 10 (64-bit), Processor: Intel Core i5-8600 or AMD Ryzen 5 2600, Memory: 16 GB RAM, Graphics: NVIDIA GeForce GTX 1060 or AMD Radeon RX 580'
+        }
+      },
+      {
+        id: 47,
+        title: 'Mortal Kombat 1',
+        category: 'action',
+        image: 'https://images.unsplash.com/photo-1552820728-8b83bb6b773f?w=400',
+        description: 'Fighting game con fatalities brutales.',
+        releaseYear: 2023,
+        developer: 'NetherRealm Studios',
+        players: '1-2',
+        rating: 4.3,
+        details: 'Reinicio de la saga Mortal Kombat con nuevos personajes y mecánicas de pelea intensas.',
+        requirements: {
+          minimum: 'OS: Windows 10 (64-bit), Processor: Intel Core i5-6600 or AMD Ryzen 5 2600, Memory: 8 GB RAM, Graphics: NVIDIA GeForce GTX 780 or AMD Radeon RX 470',
+          recommended: 'OS: Windows 10 (64-bit), Processor: Intel Core i5-8400 or AMD Ryzen 5 3600, Memory: 16 GB RAM, Graphics: NVIDIA GeForce GTX 1070 or AMD Radeon RX 5600 XT'
+        }
+      },
+      {
+        id: 48,
+        title: 'Tekken 8',
+        category: 'action',
+        image: 'https://images.unsplash.com/photo-1511512578047-dfb367046420?w=400',
+        description: 'Fighting game con historia épica.',
+        releaseYear: 2024,
+        developer: 'Bandai Namco',
+        players: '1-2',
+        rating: 4.4,
+        details: 'La octava entrega de Tekken con nuevos personajes y modos de juego.',
+        requirements: {
+          minimum: 'OS: Windows 10 (64-bit), Processor: Intel Core i5-6600K or AMD Ryzen 5 2600, Memory: 8 GB RAM, Graphics: NVIDIA GeForce GTX 960 or AMD Radeon RX 470',
+          recommended: 'OS: Windows 10 (64-bit), Processor: Intel Core i7-8700 or AMD Ryzen 5 3600, Memory: 16 GB RAM, Graphics: NVIDIA GeForce RTX 2060 or AMD Radeon RX 5600 XT'
+        }
+      },
+      {
+        id: 49,
+        title: 'Gran Turismo 7',
+        category: 'sports',
+        image: 'https://images.unsplash.com/photo-1511512578047-dfb367046420?w=400',
+        description: 'Simulador de carreras realista.',
+        releaseYear: 2022,
+        developer: 'Polyphony Digital',
+        players: '1-16',
+        rating: 4.6,
+        details: 'La última entrega de Gran Turismo con más de 400 coches y circuitos realistas.',
+        requirements: {
+          minimum: 'OS: PlayStation 4, Processor: Custom AMD Jaguar, Memory: 8 GB RAM, Graphics: Custom AMD Radeon',
+          recommended: 'OS: PlayStation 5, Processor: Custom AMD Zen 2, Memory: 16 GB RAM, Graphics: Custom AMD RDNA 2'
+        }
+      },
+      {
+        id: 50,
+        title: 'Forza Motorsport',
+        category: 'sports',
+        image: 'https://images.unsplash.com/photo-1511512578047-dfb367046420?w=400',
+        description: 'Simulador de carreras con física avanzada.',
+        releaseYear: 2023,
+        developer: 'Turn 10 Studios',
+        players: '1-12',
+        rating: 4.5,
+        details: 'Nuevo simulador de carreras de Microsoft con más de 500 coches y circuitos.',
+        requirements: {
+          minimum: 'OS: Windows 10 version 1507 or later, Processor: Intel i5-4460 or AMD Ryzen 3 1200, Memory: 8 GB RAM, Graphics: NVidia GTX 960 or AMD RX 470',
+          recommended: 'OS: Windows 11, Processor: Intel i7-7700K or AMD Ryzen 5 2600, Memory: 16 GB RAM, Graphics: NVidia RTX 2070 or AMD RX 5700 XT'
+        }
+      },
+      {
+        id: 51,
+        title: 'F1 23',
+        category: 'sports',
+        image: 'https://images.unsplash.com/photo-1511512578047-dfb367046420?w=400',
+        description: 'Simulador oficial de Fórmula 1.',
+        releaseYear: 2023,
+        developer: 'Codemasters',
+        players: '1-22',
+        rating: 4.4,
+        details: 'La experiencia oficial de F1 con todos los equipos y circuitos de la temporada 2023.',
+        requirements: {
+          minimum: 'OS: Windows 10 (64-bit), Processor: Intel Core i3-2130 or AMD FX-4300, Memory: 8 GB RAM, Graphics: NVIDIA GeForce GTX 950 or AMD Radeon R9 280',
+          recommended: 'OS: Windows 10 (64-bit), Processor: Intel Core i5-9600K or AMD Ryzen 5 2600, Memory: 16 GB RAM, Graphics: NVIDIA GeForce RTX 2060 or AMD Radeon RX 5600 XT'
+        }
+      },
+      {
+        id: 52,
+        title: 'WWE 2K23',
+        category: 'sports',
+        image: 'https://images.unsplash.com/photo-1511512578047-dfb367046420?w=400',
+        description: 'Simulador de lucha libre WWE.',
+        releaseYear: 2023,
+        developer: 'Visual Concepts',
+        players: '1-6',
+        rating: 4.2,
+        details: 'La experiencia completa de WWE con superestrellas, modos de juego y creación de luchadores.',
+        requirements: {
+          minimum: 'OS: Windows 10 (64-bit), Processor: Intel Core i5-3550 or AMD FX-8150, Memory: 8 GB RAM, Graphics: NVIDIA GeForce GTX 960 or AMD Radeon RX 470',
+          recommended: 'OS: Windows 10 (64-bit), Processor: Intel Core i5-6600K or AMD Ryzen 5 2600, Memory: 16 GB RAM, Graphics: NVIDIA GeForce GTX 1060 or AMD Radeon RX 580'
+        }
+      },
+      {
+        id: 53,
+        title: 'Madden NFL 24',
+        category: 'sports',
+        image: 'https://images.unsplash.com/photo-1511512578047-dfb367046420?w=400',
+        description: 'Simulador de fútbol americano.',
+        releaseYear: 2023,
+        developer: 'EA Tiburon',
+        players: '1-32',
+        rating: 4.3,
+        details: 'La experiencia definitiva de NFL con modos Franchise, Ultimate Team y partidos online.',
+        requirements: {
+          minimum: 'OS: Windows 10 (64-bit), Processor: Intel Core i3-6100 or AMD Athlon X4 880K, Memory: 8 GB RAM, Graphics: NVIDIA GeForce GTX 660 or AMD Radeon HD 7850',
+          recommended: 'OS: Windows 10 (64-bit), Processor: Intel Core i5-6600K or AMD Ryzen 5 2600, Memory: 16 GB RAM, Graphics: NVIDIA GeForce GTX 1060 or AMD Radeon RX 580'
+        }
+      },
+      {
+        id: 54,
+        title: 'EA Sports FC 24',
+        category: 'sports',
+        image: 'https://images.unsplash.com/photo-1511512578047-dfb367046420?w=400',
+        description: 'Simulador de fútbol con tecnología HyperMotion.',
+        releaseYear: 2023,
+        developer: 'EA Canada',
+        players: '1-22',
+        rating: 4.5,
+        details: 'El sucesor de FIFA con modos Ultimate Team, Carrera y partidos realistas.',
+        requirements: {
+          minimum: 'OS: Windows 10 (64-bit), Processor: Intel Core i5-6600 or AMD Athlon X4 845, Memory: 8 GB RAM, Graphics: NVIDIA GeForce GTX 960 or AMD Radeon RX 470',
+          recommended: 'OS: Windows 10 (64-bit), Processor: Intel Core i7-6700 or AMD Ryzen 7 2700, Memory: 16 GB RAM, Graphics: NVIDIA GeForce GTX 1660 or AMD Radeon RX 5600'
+        }
+      },
+      {
+        id: 55,
+        title: 'PGA Tour 2K23',
+        category: 'sports',
+        image: 'https://images.unsplash.com/photo-1511512578047-dfb367046420?w=400',
+        description: 'Simulador de golf con cursos reales.',
+        releaseYear: 2023,
+        developer: 'HB Studios',
+        players: '1-8',
+        rating: 4.1,
+        details: 'Experiencia completa de golf con más de 30 cursos y modos de juego variados.',
+        requirements: {
+          minimum: 'OS: Windows 10 (64-bit), Processor: Intel Core i5-4430 or AMD FX-6300, Memory: 8 GB RAM, Graphics: NVIDIA GeForce GTX 960 or AMD Radeon RX 470',
+          recommended: 'OS: Windows 10 (64-bit), Processor: Intel Core i5-6600 or AMD Ryzen 5 2600, Memory: 16 GB RAM, Graphics: NVIDIA GeForce GTX 1060 or AMD Radeon RX 580'
+        }
+      },
+      {
+        id: 56,
+        title: 'Tony Hawk\'s Pro Skater 1 + 2',
+        category: 'sports',
+        image: 'https://images.unsplash.com/photo-1511512578047-dfb367046420?w=400',
+        description: 'Remaster de los clásicos de skateboarding.',
+        releaseYear: 2020,
+        developer: 'Vicarious Visions',
+        players: '1-8',
+        rating: 4.6,
+        details: 'Remasterización de los primeros dos juegos con gráficos actualizados y modos online.',
+        requirements: {
+          minimum: 'OS: Windows 7 (64-bit), Processor: Intel Core i3-4160 or AMD FX-4300, Memory: 4 GB RAM, Graphics: NVIDIA GeForce GTX 650 Ti or AMD Radeon HD 7850',
+          recommended: 'OS: Windows 10 (64-bit), Processor: Intel Core i5-4690 or AMD Ryzen 5 1500X, Memory: 8 GB RAM, Graphics: NVIDIA GeForce GTX 960 or AMD Radeon RX 470'
+        }
+      },
+      {
+        id: 57,
+        title: 'MLB The Show 23',
+        category: 'sports',
+        image: 'https://images.unsplash.com/photo-1511512578047-dfb367046420?w=400',
+        description: 'Simulador de béisbol con March to October.',
+        releaseYear: 2023,
+        developer: 'San Diego Studio',
+        players: '1-2',
+        rating: 4.4,
+        details: 'La experiencia definitiva de MLB con modos Road to the Show y Diamond Dynasty.',
+        requirements: {
+          minimum: 'OS: PlayStation 4, Processor: Custom AMD Jaguar, Memory: 8 GB RAM, Graphics: Custom AMD Radeon',
+          recommended: 'OS: PlayStation 5, Processor: Custom AMD Zen 2, Memory: 16 GB RAM, Graphics: Custom AMD RDNA 2'
+        }
+      },
+      {
+        id: 58,
+        title: 'NHL 24',
+        category: 'sports',
+        image: 'https://images.unsplash.com/photo-1511512578047-dfb367046420?w=400',
+        description: 'Simulador de hockey sobre hielo.',
+        releaseYear: 2023,
+        developer: 'EA Canada',
+        players: '1-6',
+        rating: 4.2,
+        details: 'La experiencia completa de NHL con modos Franchise y Ultimate Team.',
+        requirements: {
+          minimum: 'OS: Windows 10 (64-bit), Processor: Intel Core i3-6100 or AMD Athlon X4 880K, Memory: 8 GB RAM, Graphics: NVIDIA GeForce GTX 660 or AMD Radeon HD 7850',
+          recommended: 'OS: Windows 10 (64-bit), Processor: Intel Core i5-6600K or AMD Ryzen 5 2600, Memory: 16 GB RAM, Graphics: NVIDIA GeForce GTX 1060 or AMD Radeon RX 580'
+        }
+      },
+      {
+        id: 59,
+        title: 'Ride 5',
+        category: 'sports',
+        image: 'https://images.unsplash.com/photo-1511512578047-dfb367046420?w=400',
+        description: 'Simulador de motociclismo.',
+        releaseYear: 2023,
+        developer: 'Milestone',
+        players: '1-12',
+        rating: 4.0,
+        details: 'Simulador de carreras de motos con más de 200 modelos y circuitos.',
+        requirements: {
+          minimum: 'OS: Windows 10 (64-bit), Processor: Intel Core i5-4460 or AMD FX-6300, Memory: 8 GB RAM, Graphics: NVIDIA GeForce GTX 960 or AMD Radeon RX 470',
+          recommended: 'OS: Windows 10 (64-bit), Processor: Intel Core i5-6600K or AMD Ryzen 5 2600, Memory: 16 GB RAM, Graphics: NVIDIA GeForce GTX 1060 or AMD Radeon RX 580'
+        }
+      },
+      {
+        id: 60,
+        title: 'MotoGP 23',
+        category: 'sports',
+        image: 'https://images.unsplash.com/photo-1511512578047-dfb367046420?w=400',
+        description: 'Simulador oficial de MotoGP.',
+        releaseYear: 2023,
+        developer: 'Milestone',
+        players: '1-18',
+        rating: 4.3,
+        details: 'La experiencia oficial de MotoGP con todos los equipos y circuitos.',
+        requirements: {
+          minimum: 'OS: Windows 10 (64-bit), Processor: Intel Core i5-4460 or AMD FX-6300, Memory: 8 GB RAM, Graphics: NVIDIA GeForce GTX 960 or AMD Radeon RX 470',
+          recommended: 'OS: Windows 10 (64-bit), Processor: Intel Core i5-6600K or AMD Ryzen 5 2600, Memory: 16 GB RAM, Graphics: NVIDIA GeForce GTX 1060 or AMD Radeon RX 580'
+        }
+      },
+      {
+        id: 61,
+        title: 'Farming Simulator 23',
+        category: 'sandbox',
+        image: 'https://images.unsplash.com/photo-1614680376739-414d95ff43df?w=400',
+        description: 'Simulador de agricultura con granjas expansivas.',
+        releaseYear: 2023,
+        developer: 'Giants Software',
+        players: '1-6',
+        rating: 4.4,
+        details: 'Gestiona tu granja, cultiva cosechas y cría animales en un mundo agrícola detallado.',
+        requirements: {
+          minimum: 'OS: Windows 10 (64-bit), Processor: Intel Core i5-3330 or AMD FX-8320, Memory: 8 GB RAM, Graphics: NVIDIA GeForce GTX 660 or AMD Radeon R7 265',
+          recommended: 'OS: Windows 10 (64-bit), Processor: Intel Core i5-6600K or AMD Ryzen 5 2600, Memory: 16 GB RAM, Graphics: NVIDIA GeForce GTX 1060 or AMD Radeon RX 580'
+        }
+      },
+      {
+        id: 62,
+        title: 'The Sims 4',
+        category: 'sandbox',
+        image: 'https://images.unsplash.com/photo-1614680376739-414d95ff43df?w=400',
+        description: 'Simulador de vida con creación de personajes.',
+        releaseYear: 2014,
+        developer: 'Maxis',
+        players: '1',
+        rating: 4.5,
+        details: 'Crea Sims, construye casas y vive historias personalizadas en un mundo abierto.',
+        requirements: {
+          minimum: 'OS: Windows 10 (64-bit), Processor: Intel Core i3 or AMD Ryzen 3, Memory: 4 GB RAM, Graphics: NVIDIA GeForce 6600 or ATI Radeon X1300',
+          recommended: 'OS: Windows 10 (64-bit), Processor: Intel Core i5 or AMD Ryzen 5, Memory: 8 GB RAM, Graphics: NVIDIA GeForce GTX 650 or AMD Radeon HD 7750'
+        }
+      },
+      {
+        id: 63,
+        title: 'Cities: Skylines',
+        category: 'sandbox',
+        image: 'https://images.unsplash.com/photo-1614680376739-414d95ff43df?w=400',
+        description: 'Simulador de construcción de ciudades.',
+        releaseYear: 2015,
+        developer: 'Colossal Order',
+        players: '1',
+        rating: 4.6,
+        details: 'Construye y gestiona una ciudad moderna, equilibrando economía, tráfico y felicidad de los ciudadanos.',
+        requirements: {
+          minimum: 'OS: Windows 7 (64-bit), Processor: Intel Core 2 Duo E6750 or AMD Athlon 64 X2 6000+, Memory: 4 GB RAM, Graphics: NVIDIA GeForce GTX 260 or ATI Radeon HD 4870',
+          recommended: 'OS: Windows 10 (64-bit), Processor: Intel Core i5-3470 or AMD FX-6350, Memory: 8 GB RAM, Graphics: NVIDIA GeForce GTX 660 or AMD Radeon HD 7870'
+        }
+      },
+      {
+        id: 64,
+        title: 'No Man\'s Sky',
+        category: 'sandbox',
+        image: 'https://images.unsplash.com/photo-1552820728-8b83bb6b773f?w=400',
+        description: 'Exploración infinita en el universo.',
+        releaseYear: 2016,
+        developer: 'Hello Games',
+        players: '1',
+        rating: 4.3,
+        details: 'Explora planetas procedurales, construye bases y sobrevive en un universo infinito.',
+        requirements: {
+          minimum: 'OS: Windows 7 (64-bit), Processor: Intel Core i3, Memory: 8 GB RAM, Graphics: NVIDIA GTX 480, 1GB',
+          recommended: 'OS: Windows 10 (64-bit), Processor: Intel Core i5, Memory: 16 GB RAM, Graphics: NVIDIA GTX 1060, 6GB'
+        }
+      },
+      {
+        id: 65,
+        title: 'Subnautica',
+        category: 'sandbox',
+        image: 'https://images.unsplash.com/photo-1614680376739-414d95ff43df?w=400',
+        description: 'Supervivencia en un océano alienígena.',
+        releaseYear: 2018,
+        developer: 'Unknown Worlds Entertainment',
+        players: '1',
+        rating: 4.7,
+        details: 'Sobrevive en un planeta oceánico, construye submarinos y explora las profundidades.',
+        requirements: {
+          minimum: 'OS: Windows 7 (64-bit), Processor: Intel Haswell 2.5 GHz or equivalent, Memory: 4 GB RAM, Graphics: Intel HD 4600 or equivalent',
+          recommended: 'OS: Windows 10 (64-bit), Processor: Intel Core i5 2.6 GHz or equivalent, Memory: 8 GB RAM, Graphics: NVIDIA GeForce GTX 960 or AMD Radeon R9 280'
+        }
+      },
+      {
+        id: 66,
+        title: 'Terraria',
+        category: 'sandbox',
+        image: 'https://images.unsplash.com/photo-1614680376739-414d95ff43df?w=400',
+        description: 'Aventura 2D con construcción y exploración.',
+        releaseYear: 2011,
+        developer: 'Re-Logic',
+        players: '1-16',
+        rating: 4.8,
+        details: 'Explora mundos 2D, construye estructuras y lucha contra jefes en un sandbox infinito.',
+        requirements: {
+          minimum: 'OS: Windows XP SP2, Processor: 1.6 GHz, Memory: 512 MB RAM, Graphics: 128 MB Video Memory, DirectX 9.0c',
+          recommended: 'OS: Windows 7, Processor: 2.0 GHz, Memory: 1 GB RAM, Graphics: 256 MB Video Memory, DirectX 9.0c'
+        }
+      },
+      {
+        id: 67,
+        title: 'Starbound',
+        category: 'sandbox',
+        image: 'https://images.unsplash.com/photo-1552820728-8b83bb6b773f?w=400',
+        description: 'Exploración espacial 2D con crafting.',
+        releaseYear: 2016,
+        developer: 'Chucklefish',
+        players: '1-4',
+        rating: 4.4,
+        details: 'Explora planetas, construye colonias y sobrevive en un universo 2D pixelado.',
+        requirements: {
+          minimum: 'OS: Windows 7 (64-bit), Processor: Dual Core 2.0 GHz, Memory: 2 GB RAM, Graphics: OpenGL 2.1 compatible',
+          recommended: 'OS: Windows 10 (64-bit), Processor: Quad Core 2.5 GHz, Memory: 4 GB RAM, Graphics: OpenGL 3.0 compatible'
+        }
+      },
+      {
+        id: 68,
+        title: 'Don\'t Starve Together',
+        category: 'sandbox',
+        image: 'https://images.unsplash.com/photo-1614680376739-414d95ff43df?w=400',
+        description: 'Supervivencia con elementos roguelike.',
+        releaseYear: 2016,
+        developer: 'Klei Entertainment',
+        players: '1-64',
+        rating: 4.5,
+        details: 'Sobrevive en un mundo hostil recolectando recursos y luchando contra criaturas.',
+        requirements: {
+          minimum: 'OS: Windows 7 (64-bit), Processor: Dual Core 2.6 GHz, Memory: 1 GB RAM, Graphics: OpenGL 2.1 compatible',
+          recommended: 'OS: Windows 10 (64-bit), Processor: Quad Core 3.0 GHz, Memory: 4 GB RAM, Graphics: OpenGL 3.0 compatible'
+        }
+      },
+      {
+        id: 69,
+        title: '7 Days to Die',
+        category: 'sandbox',
+        image: 'https://images.unsplash.com/photo-1552820728-8b83bb6b773f?w=400',
+        description: 'Supervivencia zombie con construcción.',
+        releaseYear: 2013,
+        developer: 'The Fun Pimps',
+        players: '1-64',
+        rating: 4.2,
+        details: 'Sobrevive 7 días contra zombies, construye bases y explora en un mundo postapocalíptico.',
+        requirements: {
+          minimum: 'OS: Windows 7 (64-bit), Processor: Dual Core 2.4 GHz, Memory: 4 GB RAM, Graphics: 1 GB VRAM',
+          recommended: 'OS: Windows 10 (64-bit), Processor: Quad Core 3.0 GHz, Memory: 8 GB RAM, Graphics: 2 GB VRAM'
+        }
+      },
+      {
     ];
 
     let currentCategory = 'all';
