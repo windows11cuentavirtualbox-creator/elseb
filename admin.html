@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Panel Admin</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    * { box-sizing: border-box; }
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; background: #1a1a1a; color: #e0e0e0; overflow-x: hidden; }
+    .sidebar { position: fixed; top: 0; left: 0; width: 280px; height: 100vh; background: linear-gradient(180deg, #2c3e50, #34495e); box-shadow: 2px 0 10px rgba(0,0,0,0.3); z-index: 1000; transition: transform 0.3s; }
+    .sidebar.collapsed { transform: translateX(-280px); }
+    .sidebar-header { padding: 30px 20px; text-align: center; border-bottom: 1px solid #34495e; }
+    .sidebar-header h2 { margin: 0; color: #ecf0f1; font-size: 1.6em; }
+    .sidebar-menu { list-style: none; padding: 0; margin: 30px 0; }
+    .sidebar-menu li { margin: 8px 0; }
+    .sidebar-menu a { display: block; padding: 18px 25px; color: #bdc3c7; text-decoration: none; transition: all 0.3s; border-radius: 8px; margin: 0 15px; }
+    .sidebar-menu a:hover, .sidebar-menu a.active { background: #3498db; color: white; }
+    .sidebar-menu a i { margin-right: 12px; width: 22px; }
+    .main-content { margin-left: 280px; transition: margin-left 0.3s; }
+    .main-content.expanded { margin-left: 0; }
+    .header { background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 30px 40px; box-shadow: 0 2px 10px rgba(0,0,0,0.2); position: relative; }
+    .header h1 { margin: 0; font-size: 2.2em; }
+    .header p { margin: 8px 0 0; opacity: 0.8; }
+    .toggle-btn { position: fixed; top: 25px; left: 25px; z-index: 1001; background: #3498db; color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; }
+    .dashboard { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 25px; padding: 40px; }
+    .card { background: #2c3e50; padding: 30px; border-radius: 18px; box-shadow: 0 8px 25px rgba(0,0,0,0.3); transition: transform 0.3s, box-shadow 0.3s; position: relative; overflow: hidden; border: 1px solid #34495e; }
+    .card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 5px; background: linear-gradient(90deg, #3498db, #2ecc71); }
+    .card:hover { transform: translateY(-6px); box-shadow: 0 14px 40px rgba(0,0,0,0.4); }
+    .card h3 { margin-top: 0; color: #ecf0f1; display: flex; align-items: center; font-size: 1.3em; }
+    .card h3 i { margin-right: 12px; color: #3498db; }
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 18px; margin-top: 25px; }
+    .stat-item { text-align: center; padding: 18px; background: #34495e; border-radius: 12px; position: relative; }
+    .stat-item::after { content: ''; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 35px; height: 4px; background: #3498db; border-radius: 3px; }
+    .stat-item h4 { margin: 0; font-size: 2.2em; color: #2ecc71; }
+    .stat-item p { margin: 6px 0 0; font-weight: bold; color: #bdc3c7; font-size: 0.95em; }
+    .notifications { background: #f39c12; border: 1px solid #e67e22; border-radius: 12px; padding: 18px; margin-bottom: 25px; color: #2c3e50; }
+    .notification-item { display: flex; align-items: center; margin-bottom: 12px; }
+    .notification-item i { margin-right: 12px; color: #2c3e50; }
+    .activity-feed { max-height: 320px; overflow-y: auto; }
+    .activity-item { display: flex; align-items: center; padding: 12px 0; border-bottom: 1px solid #34495e; }
+    .activity-item i { margin-right: 12px; color: #3498db; }
+    .activity-item .time { font-size: 0.85em; color: #7f8c8d; margin-left: auto; }
+    .content-section { padding: 40px; background: #1a1a1a; min-height: calc(100vh - 80px); }
+    .content-section h2 { color: #ecf0f1; margin-bottom: 25px; display: flex; align-items: center; }
+    .content-section h2 i { margin-right: 12px; color: #3498db; }
+    .action-buttons { margin-bottom: 25px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 25px; background: #2c3e50; border-radius: 12px; overflow: hidden; }
+    th, td { padding: 15px; text-align: left; border-bottom: 1px solid #34495e; color: #ecf0f1; }
+    th { background: #34495e; font-weight: bold; color: #ecf0f1; }
+    tr:hover { background: #34495e; }
+    button { padding: 14px 22px; border: none; border-radius: 10px; cursor: pointer; font-weight: bold; transition: all 0.3s; margin: 6px; }
+    .btn-primary { background: #3498db; color: white; }
+    .btn-primary:hover { background: #2980b9; }
+    .btn-success { background: #2ecc71; color: white; }
+    .btn-success:hover { background: #27ae60; }
+    .btn-danger { background: #e74c3c; color: white; }
+    .btn-danger:hover { background: #c0392b; }
+    .btn-warning { background: #f39c12; color: #2c3e50; }
+    .btn-warning:hover { background: #e67e22; }
+    .form-group { margin-bottom: 18px; }
+    .form-group label { display: block; margin-bottom: 6px; font-weight: bold; color: #ecf0f1; }
+    input, select { width: 100%; padding: 12px; border: 1px solid #34495e; border-radius: 6px; background: #34495e; color: #ecf0f1; }
+    input:focus, select:focus { outline: none; border-color: #3498db; }
+    .alert { padding: 18px; border-radius: 6px; margin-bottom: 18px; }
+    .alert-success { background: #2ecc71; color: white; }
+    .alert-danger { background: #e74c3c; color: white; }
+    .chart-container { height: 320px; margin-top: 25px; background: #2c3e50; border-radius: 12px; padding: 25px; }
+    .settings-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 25px; }
+    .setting-item { background: #34495e; padding: 25px; border-radius: 12px; border: 1px solid #2c3e50; }
+    .setting-item h4 { color: #ecf0f1; margin-top: 0; display: flex; align-items: center; }
+    .setting-item h4 i { margin-right: 12px; color: #3498db; }
+    .floating-icons { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
+    .floating-icon { position: absolute; font-size: 2.5em; color: rgba(52,152,219,0.08); animation: floatIcon 12s ease-in-out infinite; }
+    @keyframes floatIcon { 0%, 100% { transform: translateY(0px) rotate(0deg); } 50% { transform: translateY(-25px) rotate(180deg); } }
+    @media (max-width: 768px) {
+      .sidebar { transform: translateX(-280px); }
+      .main-content { margin-left: 0; }
+      .toggle-btn { display: block; }
+    }
+  </style>
+</head>
+<body>
+  <button class="toggle-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <h2><i class="fas fa-tachometer-alt"></i> Admin</h2>
+    </div>
+    <ul class="sidebar-menu">
+      <li><a href="#" class="active" onclick="showSection('dashboard')"><i class="fas fa-home"></i> Dashboard</a></li>
+      <li><a href="#" onclick="showSection('visitors')"><i class="fas fa-users"></i> Visitas</a></li>
+      <li><a href="#" onclick="showSection('analytics')"><i class="fas fa-chart-bar"></i> Análisis</a></li>
+      <li><a href="#" onclick="showSection('settings')"><i class="fas fa-cog"></i> Configuración</a></li>
+      <li><a href="#" onclick="showSection('logs')"><i class="fas fa-file-alt"></i> Logs</a></li>
+    </ul>
+  </div>
+  <div class="main-content" id="mainContent">
+    <div class="header">
+      <h1>Panel de Administración</h1>
+      <p>Gestión completa del sitio web</p>
+    </div>
+
+    <div id="dashboard" class="content-section">
+      <div class="floating-icons">
+        <i class="floating-icon fas fa-chart-line"></i>
+        <i class="floating-icon fas fa-users"></i>
+        <i class="floating-icon fas fa-shield-alt"></i>
+        <i class="floating-icon fas fa-bell"></i>
+        <i class="floating-icon fas fa-cog"></i>
+      </div>
+      <div class="dashboard">
+        <div class="card">
+          <h3><i class="fas fa-chart-line"></i>Estadísticas en Tiempo Real</h3>
+          <div class="stats-grid">
+            <div class="stat-item">
+              <h4 id="totalVisits">0</h4>
+              <p><i class="fas fa-eye"></i> Visitas Totales</p>
+            </div>
+            <div class="stat-item">
+              <h4 id="uniqueVisitors">0</h4>
+              <p><i class="fas fa-users"></i> Visitantes Únicos</p>
+            </div>
+            <div class="stat-item">
+              <h4 id="todayVisits">0</h4>
+              <p><i class="fas fa-calendar-day"></i> Hoy</p>
+            </div>
+            <div class="stat-item">
+              <h4 id="avgSession">0m</h4>
+              <p><i class="fas fa-clock"></i> Sesión Promedio</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3><i class="fas fa-shield-alt"></i>Estado del Sistema</h3>
+          <p><i class="fas fa-server"></i> Servidor: <span style="color: #2ecc71;">Online</span></p>
+          <p><i class="fas fa-database"></i> Base de Datos: <span style="color: #2ecc71;">Conectada</span></p>
+          <p><i class="fas fa-lock"></i> Seguridad: <span style="color: #2ecc71;">Activa</span></p>
+          <p><i class="fas fa-clock"></i> Última Actualización: <span id="lastUpdate">Ahora</span></p>
+        </div>
+
+        <div class="card">
+          <h3><i class="fas fa-bell"></i>Notificaciones Recientes</h3>
+          <div class="notifications">
+            <div class="notification-item">
+              <i class="fas fa-user-plus"></i>
+              <span>Nueva visita registrada desde España</span>
+            </div>
+            <div class="notification-item">
+              <i class="fas fa-shield"></i>
+              <span>Intento de acceso bloqueado desde IP sospechosa</span>
+            </div>
+            <div class="notification-item">
+              <i class="fas fa-chart-line"></i>
+              <span>Visitas diarias superaron el promedio semanal</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3><i class="fas fa-history"></i>Actividad Reciente</h3>
+          <div class="activity-feed">
+            <div class="activity-item">
+              <i class="fas fa-sign-in-alt"></i>
+              <span>Login exitoso - Admin</span>
+              <span class="time">2 min ago</span>
+            </div>
+            <div class="activity-item">
+              <i class="fas fa-eye"></i>
+              <span>Nueva visita registrada</span>
+              <span class="time">5 min ago</span>
+            </div>
+            <div class="activity-item">
+              <i class="fas fa-cog"></i>
+              <span>Configuración actualizada</span>
+              <span class="time">15 min ago</span>
+            </div>
+            <div class="activity-item">
+              <i class="fas fa-download"></i>
+              <span>Reporte exportado</span>
+              <span class="time">1 hour ago</span>
+            </div>
+            <div class="activity-item">
+              <i class="fas fa-user-plus"></i>
+              <span>Nuevo usuario registrado</span>
+              <span class="time">2 hours ago</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="visitors" class="content-section" style="display: none;">
+      <h2><i class="fas fa-users"></i>Historial de Visitas</h2>
+      <div class="action-buttons">
+        <button class="btn-primary" onclick="loadVisitors()"><i class="fas fa-sync"></i> Actualizar</button>
+        <button class="btn-danger" onclick="clearVisitors()"><i class="fas fa-trash"></i> Limpiar Historial</button>
+        <button class="btn-success" onclick="exportVisitors()"><i class="fas fa-download"></i> Exportar CSV</button>
+      </div>
+      <table id="visitorsTable">
+        <thead>
+          <tr>
+            <th><i class="fas fa-hashtag"></i> #</th>
+            <th><i class="fas fa-globe"></i> IP</th>
+            <th><i class="fas fa-calendar"></i> Fecha/Hora</th>
+            <th><i class="fas fa-user-secret"></i> Agente</th>
+            <th><i class="fas fa-flag"></i> País</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <div id="analytics" class="content-section" style="display: none;">
+      <h2><i class="fas fa-chart-pie"></i>Análisis de Datos</h2>
+      <div class="chart-container">
+        <canvas id="visitsChart"></canvas>
+      </div>
+      <div style="margin-top: 20px;">
+        <h3>Top IPs Visitantes</h3>
+        <table id="topIPsTable">
+          <thead>
+            <tr>
+              <th>IP</th>
+              <th>Visitas</th>
+              <th>Última Visita</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div id="settings" class="content-section" style="display: none;">
+      <h2><i class="fas fa-wrench"></i>Configuración del Sistema</h2>
+      <div class="settings-grid">
+        <div class="setting-item">
+          <h4><i class="fas fa-key"></i>Cambiar Contraseña Admin</h4>
+          <div class="form-group">
+            <label>Contraseña Actual</label>
+            <input type="password" id="currentPass">
+          </div>
+          <div class="form-group">
+            <label>Nueva Contraseña</label>
+            <input type="password" id="newPass">
+          </div>
+          <button class="btn-warning" onclick="changePassword()"><i class="fas fa-save"></i> Cambiar</button>
+        </div>
+
+        <div class="setting-item">
+          <h4><i class="fas fa-network-wired"></i>IPs Permitidas</h4>
+          <p>IPs actuales: <span id="currentIPs"></span></p>
+          <div class="form-group">
+            <label>Agregar IP</label>
+            <input type="text" id="newIP" placeholder="ej: 192.168.1.1">
+          </div>
+          <button class="btn-success" onclick="addIP()"><i class="fas fa-plus"></i> Agregar</button>
+          <div class="form-group">
+            <label>Remover IP</label>
+            <input type="text" id="removeIP" placeholder="IP a remover">
+          </div>
+          <button class="btn-danger" onclick="removeIP()"><i class="fas fa-minus"></i> Remover</button>
+        </div>
+
+        <div class="setting-item">
+          <h4><i class="fas fa-palette"></i>Tema del Sitio</h4>
+          <div class="form-group">
+            <label>Seleccionar Tema</label>
+            <select id="themeSelect">
+              <option value="default">Por Defecto</option>
+              <option value="dark">Oscuro</option>
+              <option value="light">Claro</option>
+            </select>
+          </div>
+          <button class="btn-primary" onclick="changeTheme()"><i class="fas fa-paint-brush"></i> Aplicar</button>
+        </div>
+
+        <div class="setting-item">
+          <h4><i class="fas fa-bell"></i>Notificaciones</h4>
+          <div class="form-group">
+            <label><input type="checkbox" id="emailNotif"> Notificaciones por Email</label>
+          </div>
+          <div class="form-group">
+            <label><input type="checkbox" id="pushNotif"> Notificaciones Push</label>
+          </div>
+          <button class="btn-primary" onclick="saveNotifications()"><i class="fas fa-save"></i> Guardar</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="logs" class="content-section" style="display: none;">
+      <h2><i class="fas fa-terminal"></i>Logs del Sistema</h2>
+      <div style="background: #34495e; padding: 20px; border-radius: 10px; font-family: monospace; max-height: 400px; overflow-y: auto; color: #ecf0f1;" id="logsContainer">
+        <!-- Logs will be populated here -->
+      </div>
+      <div class="action-buttons">
+        <button class="btn-primary" onclick="loadLogs()"><i class="fas fa-sync"></i> Actualizar Logs</button>
+        <button class="btn-danger" onclick="clearLogs()"><i class="fas fa-trash"></i> Limpiar Logs</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    let visitsChart;
+
+    async function loadStats() {
+      const response = await fetch('/stats');
+      const stats = await response.json();
+      document.getElementById('totalVisits').textContent = stats.totalVisits;
+      document.getElementById('uniqueVisitors').textContent = stats.uniqueVisitors;
+      // Simular datos adicionales
+      document.getElementById('todayVisits').textContent = Math.floor(Math.random() * 50);
+      document.getElementById('avgSession').textContent = Math.floor(Math.random() * 10) + 'm';
+      document.getElementById('lastUpdate').textContent = new Date().toLocaleTimeString();
+    }
+
+    async function loadVisitors() {
+      const response = await fetch('/visitors');
+      const visitors = await response.json();
+      const tbody = document.querySelector('#visitorsTable tbody');
+      tbody.innerHTML = '';
+      visitors.forEach((visitor, index) => {
+        const row = `<tr>
+          <td>${index + 1}</td>
+          <td>${visitor.ip}</td>
+          <td>${new Date(visitor.timestamp).toLocaleString()}</td>
+          <td>Chrome/Edge</td>
+          <td>Desconocido</td>
+        </tr>`;
+        tbody.innerHTML += row;
+      });
+    }
+
+    async function clearVisitors() {
+      if (confirm('¿Estás seguro de limpiar el historial? Esto no se puede deshacer.')) {
+        await fetch('/clear-visitors', { method: 'POST' });
+        loadVisitors();
+        loadStats();
+        showAlert('Historial limpiado exitosamente', 'success');
+      }
+    }
+
+    function exportVisitors() {
+      // Simular exportación
+      showAlert('Función de exportación próximamente disponible', 'info');
+    }
+
+    async function addIP() {
+      const ip = document.getElementById('newIP').value;
+      const response = await fetch('/add-ip', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ip })
+      });
+      const data = await response.json();
+      if (response.ok) {
+        document.getElementById('currentIPs').textContent = data.ips.join(', ');
+        document.getElementById('newIP').value = '';
+        showAlert(data.message, 'success');
+      } else {
+        showAlert(data.message, 'danger');
+      }
+    }
+
+    async function removeIP() {
+      const ip = document.getElementById('removeIP').value;
+      const response = await fetch('/remove-ip', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ip })
+      });
+      const data = await response.json();
+      if (response.ok) {
+        document.getElementById('currentIPs').textContent = data.ips.join(', ');
+        document.getElementById('removeIP').value = '';
+        showAlert(data.message, 'success');
+      } else {
+        showAlert(data.message, 'danger');
+      }
+    }
+
+    function changePassword() {
+      showAlert('Función próximamente disponible', 'info');
+    }
+
+    function changeTheme() {
+      showAlert('Tema cambiado (simulado)', 'success');
+    }
+
+    function saveNotifications() {
+      showAlert('Configuración guardada', 'success');
+    }
+
+    function loadLogs() {
+      const logs = [
+        '[INFO] Servidor iniciado en puerto 3000',
+        '[INFO] Nueva visita registrada: 127.0.0.1',
+        '[INFO] Login exitoso para admin',
+        '[WARN] Intento de acceso desde IP no autorizada: 192.168.1.100'
+      ];
+      document.getElementById('logsContainer').innerHTML = logs.map(log => `<div>${new Date().toISOString()} ${log}</div>`).join('');
+    }
+
+    function clearLogs() {
+      document.getElementById('logsContainer').innerHTML = '';
+      showAlert('Logs limpiados', 'success');
+    }
+
+    function showSection(sectionName) {
+      document.querySelectorAll('.sidebar-menu a').forEach(a => a.classList.remove('active'));
+      document.querySelectorAll('.content-section').forEach(s => s.style.display = 'none');
+      document.querySelector(`a[onclick="showSection('${sectionName}')"]`).classList.add('active');
+      document.getElementById(sectionName).style.display = 'block';
+
+      if (sectionName === 'analytics') {
+        loadAnalytics();
+      }
+    }
+
+    function toggleSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      const mainContent = document.getElementById('mainContent');
+      sidebar.classList.toggle('collapsed');
+      mainContent.classList.toggle('expanded');
+    }
+
+    function loadAnalytics() {
+      // Simular datos para el gráfico
+      const ctx = document.getElementById('visitsChart').getContext('2d');
+      if (visitsChart) visitsChart.destroy();
+      visitsChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'],
+          datasets: [{
+            label: 'Visitas Diarias',
+            data: [12, 19, 3, 5, 2, 3, 9],
+            borderColor: '#007bff',
+            backgroundColor: 'rgba(0, 123, 255, 0.1)',
+            tension: 0.4
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false
+        }
+      });
+
+      // Top IPs
+      const topIPs = [
+        { ip: '127.0.0.1', visits: 45, last: '2023-10-01' },
+        { ip: '192.168.1.1', visits: 23, last: '2023-09-30' }
+      ];
+      const tbody = document.querySelector('#topIPsTable tbody');
+      tbody.innerHTML = topIPs.map(ip => `<tr><td>${ip.ip}</td><td>${ip.visits}</td><td>${ip.last}</td></tr>`).join('');
+    }
+
+    function showAlert(message, type) {
+      const alertDiv = document.createElement('div');
+      alertDiv.className = `alert alert-${type}`;
+      alertDiv.innerHTML = `<i class="fas fa-info-circle"></i> ${message}`;
+      document.querySelector('.main-content').insertBefore(alertDiv, document.querySelector('.main-content').firstChild);
+      setTimeout(() => alertDiv.remove(), 3000);
+    }
+
+    // Cargar datos iniciales
+    loadStats();
+    loadVisitors();
+    loadLogs();
+    document.getElementById('currentIPs').textContent = '127.0.0.1, ::1';
+  </script>
+</body>
+</html>

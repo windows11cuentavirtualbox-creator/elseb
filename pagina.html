@@ -1,0 +1,1274 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Fandom de Juegos</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+    .sidebar-toggle {
+        position: fixed;
+        right: 30px;
+        top: 30px;
+        background: #007bff;
+        color: white;
+        border: none;
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        cursor: pointer;
+        font-size: 24px;
+        z-index: 101;
+        box-shadow: 0 6px 20px rgba(0,123,255,0.4);
+        transition: all 0.3s ease;
+      }
+      .sidebar-toggle:hover {
+        transform: scale(1.1);
+      }
+      .sidebar.hidden {
+        display: none;
+      }
+      .floating-icons {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 0;
+      }
+      .floating-icon {
+        position: absolute;
+        font-size: 2em;
+        color: rgba(0,123,255,0.1);
+        animation: floatIcon 10s ease-in-out infinite;
+      }
+      @keyframes floatIcon {
+        0%, 100% { transform: translateY(0px) rotate(0deg); }
+        50% { transform: translateY(-20px) rotate(180deg); }
+      }
+    </style>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #333;
+      min-height: 100vh;
+      position: relative;
+      overflow-x: hidden;
+    }
+    body::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="%23ffffff" opacity="0.03"/><circle cx="75" cy="75" r="1" fill="%23ffffff" opacity="0.03"/><circle cx="50" cy="10" r="0.5" fill="%23ffffff" opacity="0.02"/><circle cx="10" cy="50" r="0.5" fill="%23ffffff" opacity="0.02"/><circle cx="90" cy="30" r="0.5" fill="%23ffffff" opacity="0.02"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+      pointer-events: none;
+    }
+    .container {
+      max-width: 1200px;
+      margin: auto;
+      padding: 20px;
+      position: relative;
+      z-index: 1;
+    }
+    header {
+      text-align: center;
+      padding: 40px 30px;
+      background: rgba(255,255,255,0.95);
+      border-radius: 20px;
+      margin-bottom: 30px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+    header .icon {
+      font-size: 4em;
+      color: #007bff;
+      margin-bottom: 15px;
+      text-shadow: 0 2px 10px rgba(0,123,255,0.3);
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+    header h1 {
+      margin: 0;
+      font-size: 3em;
+      color: #007bff;
+      background: linear-gradient(135deg, #007bff, #6610f2);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-weight: 700;
+    }
+    header p {
+      margin: 15px 0 0;
+      font-size: 1.2em;
+      color: #666;
+      font-weight: 300;
+    }
+    .search-bar {
+      margin-bottom: 40px;
+      text-align: center;
+      position: relative;
+    }
+    .search-bar input {
+      width: 70%;
+      max-width: 500px;
+      padding: 18px 25px;
+      border: none;
+      border-radius: 50px;
+      font-size: 1.1em;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+      backdrop-filter: blur(10px);
+      background: rgba(255,255,255,0.9);
+      transition: all 0.3s ease;
+      outline: none;
+    }
+    .search-bar input:focus {
+      box-shadow: 0 8px 32px rgba(0,123,255,0.2);
+      transform: translateY(-2px);
+    }
+    .search-bar button {
+      padding: 18px 30px;
+      background: linear-gradient(135deg, #28a745, #20c997);
+      color: white;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      margin-left: 15px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(40,167,69,0.3);
+    }
+    .search-bar button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(40,167,69,0.4);
+    }
+    .search-bar button i {
+      margin-right: 8px;
+    }
+    .games-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 25px;
+      margin-bottom: 40px;
+    }
+    .game-card {
+      background: rgba(255,255,255,0.95);
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+      transition: all 0.4s ease;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.2);
+      cursor: pointer;
+      position: relative;
+    }
+    .game-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0));
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    .game-card:hover {
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+    }
+    .game-card:hover::before {
+      opacity: 1;
+    }
+    .game-image {
+      height: 220px;
+      background-size: cover;
+      background-position: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .game-image::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, rgba(0,0,0,0.1), rgba(0,0,0,0.3));
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    .game-card:hover .game-image::after {
+      opacity: 1;
+    }
+    .game-content {
+      padding: 25px;
+    }
+    .game-content h3 {
+      margin: 0 0 12px;
+      color: #007bff;
+      font-size: 1.3em;
+      font-weight: 600;
+    }
+    .game-content p {
+      margin: 0 0 18px;
+      line-height: 1.6;
+      color: #555;
+    }
+    .game-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.9em;
+      color: #777;
+      border-top: 1px solid #eee;
+      padding-top: 15px;
+    }
+    .game-meta span {
+      display: flex;
+      align-items: center;
+      font-weight: 500;
+    }
+    .game-meta i {
+      margin-right: 6px;
+      color: #007bff;
+    }
+    .categories {
+      margin-bottom: 40px;
+    }
+    .categories h2 {
+      color: white;
+      text-align: center;
+      margin-bottom: 25px;
+      font-size: 2em;
+      font-weight: 300;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    }
+    .category-tabs {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 25px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .category-tab {
+      padding: 12px 24px;
+      background: rgba(255,255,255,0.15);
+      color: white;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-radius: 30px;
+      cursor: pointer;
+      margin: 0;
+      transition: all 0.3s ease;
+      font-weight: 500;
+      backdrop-filter: blur(10px);
+      font-size: 0.95em;
+    }
+    .category-tab:hover {
+      background: rgba(255,255,255,0.25);
+      transform: translateY(-2px);
+    }
+    .category-tab.active {
+      background: white;
+      color: #007bff;
+      border-color: white;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+    .game-details {
+      display: none;
+      background: rgba(255,255,255,0.95);
+      padding: 40px;
+      border-radius: 20px;
+      margin-top: 30px;
+      box-shadow: 0 15px 50px rgba(0,0,0,0.15);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+    .game-details.active {
+      display: block;
+      animation: slideIn 0.5s ease-out;
+    }
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .back-btn {
+      background: linear-gradient(135deg, #6c757d, #5a6268);
+      color: white;
+      border: none;
+      padding: 12px 25px;
+      border-radius: 25px;
+      cursor: pointer;
+      margin-bottom: 25px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(108,117,125,0.3);
+    }
+    .back-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(108,117,125,0.4);
+    }
+    .back-btn i {
+      margin-right: 8px;
+    }
+    .floating-elements {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      z-index: 0;
+      pointer-events: none;
+    }
+    .floating-element {
+      position: absolute;
+      background: rgba(255,255,255,0.1);
+      border-radius: 50%;
+      animation: float 8s ease-in-out infinite;
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-30px) rotate(180deg); }
+    }
+
+    /* Sección de Juegos Destacados */
+    .featured-section {
+      background: rgba(255,255,255,0.95);
+      padding: 40px;
+      border-radius: 20px;
+      margin-bottom: 40px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+    .featured-section h2 {
+      color: #007bff;
+      text-align: center;
+      margin-bottom: 30px;
+      font-size: 2em;
+      font-weight: 600;
+    }
+    .featured-section h2 i {
+      margin-right: 10px;
+    }
+    .carousel {
+      position: relative;
+      overflow: hidden;
+      border-radius: 15px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    }
+    .carousel-container {
+      display: flex;
+      transition: transform 0.5s ease;
+    }
+    .carousel-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(0,123,255,0.8);
+      color: white;
+      border: none;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 20px;
+      transition: all 0.3s ease;
+      z-index: 10;
+    }
+    .carousel-btn:hover {
+      background: #007bff;
+      transform: translateY(-50%) scale(1.1);
+    }
+    .carousel-btn.prev { left: 10px; }
+    .carousel-btn.next { right: 10px; }
+
+    /* Sección de Reseñas */
+    .reviews-section {
+      background: rgba(255,255,255,0.95);
+      padding: 40px;
+      border-radius: 20px;
+      margin-bottom: 40px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+    .reviews-section h2 {
+      color: #007bff;
+      text-align: center;
+      margin-bottom: 30px;
+      font-size: 2em;
+      font-weight: 600;
+    }
+    .reviews-section h2 i {
+      margin-right: 10px;
+    }
+    .reviews-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+    }
+    .review-card {
+      background: #f8f9fa;
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+      border-left: 4px solid #007bff;
+    }
+    .review-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+    .review-avatar {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      margin-right: 15px;
+      border: 2px solid #007bff;
+    }
+    .review-header h4 {
+      margin: 0;
+      color: #007bff;
+      font-size: 1.1em;
+    }
+    .stars {
+      color: gold;
+      font-size: 1.2em;
+    }
+    .review-card p {
+      margin: 0;
+      line-height: 1.6;
+      color: #555;
+    }
+
+    /* Sección de Noticias */
+    .news-section {
+      background: rgba(255,255,255,0.95);
+      padding: 40px;
+      border-radius: 20px;
+      margin-bottom: 40px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+    .news-section h2 {
+      color: #007bff;
+      text-align: center;
+      margin-bottom: 30px;
+      font-size: 2em;
+      font-weight: 600;
+    }
+    .news-section h2 i {
+      margin-right: 10px;
+    }
+    .news-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+    }
+    .news-card {
+      background: white;
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+      transition: transform 0.3s ease;
+      cursor: pointer;
+    }
+    .news-card:hover {
+      transform: translateY(-5px);
+    }
+    .news-card img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+    }
+    .news-content {
+      padding: 20px;
+    }
+    .news-content h3 {
+      margin: 0 0 10px;
+      color: #007bff;
+      font-size: 1.3em;
+    }
+    .news-content p {
+      margin: 0 0 15px;
+      line-height: 1.6;
+      color: #555;
+    }
+    .news-date {
+      color: #777;
+      font-size: 0.9em;
+      font-style: italic;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      position: fixed;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 300px;
+      z-index: 100;
+    }
+    .sidebar-card {
+      background: rgba(255,255,255,0.95);
+      padding: 25px;
+      border-radius: 15px;
+      margin-bottom: 20px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+    .sidebar-card h3 {
+      margin: 0 0 20px;
+      color: #007bff;
+      font-size: 1.2em;
+      display: flex;
+      align-items: center;
+    }
+    .sidebar-card h3 i {
+      margin-right: 10px;
+    }
+    .stat {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+      padding: 10px;
+      background: #f8f9fa;
+      border-radius: 10px;
+    }
+    .stat-number {
+      font-size: 1.5em;
+      font-weight: bold;
+      color: #28a745;
+    }
+    .stat-label {
+      font-size: 0.9em;
+      color: #666;
+    }
+    .category-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .category-list li {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px solid #eee;
+    }
+    .category-name {
+      font-weight: 500;
+      color: #007bff;
+    }
+    .category-count {
+      color: #666;
+      font-size: 0.9em;
+    }
+
+    /* Footer */
+    footer {
+      background: rgba(255,255,255,0.95);
+      padding: 40px 0 20px;
+      margin-top: 60px;
+      backdrop-filter: blur(10px);
+      border-top: 1px solid rgba(255,255,255,0.2);
+    }
+    .footer-content {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 40px;
+      max-width: 1200px;
+      margin: auto;
+      padding: 0 20px;
+    }
+    .footer-section h3 {
+      color: #007bff;
+      margin-bottom: 15px;
+      font-size: 1.3em;
+    }
+    .footer-section p {
+      line-height: 1.6;
+      color: #555;
+      margin: 0 0 15px;
+    }
+    .footer-section ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .footer-section ul li {
+      margin-bottom: 8px;
+    }
+    .footer-section ul li a {
+      color: #666;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+    .footer-section ul li a:hover {
+      color: #007bff;
+    }
+    .social-links {
+      display: flex;
+      gap: 15px;
+    }
+    .social-link {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      background: #007bff;
+      color: white;
+      border-radius: 50%;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+    .social-link:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 4px 15px rgba(0,123,255,0.3);
+    }
+    .footer-bottom {
+      text-align: center;
+      padding-top: 20px;
+      border-top: 1px solid #eee;
+      margin-top: 30px;
+      color: #666;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .sidebar {
+        display: none;
+      }
+      .carousel-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 16px;
+      }
+      .reviews-grid, .news-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <button class="sidebar-toggle" onclick="toggleSidebar()" title="Toggle Estadísticas"><i class="fas fa-chart-bar"></i></button>
+
+    <div class="container">
+    <header>
+      <div class="floating-icons">
+        <i class="floating-icon fas fa-gamepad"></i>
+        <i class="floating-icon fas fa-trophy"></i>
+        <i class="floating-icon fas fa-star"></i>
+        <i class="floating-icon fas fa-rocket"></i>
+        <i class="floating-icon fas fa-crown"></i>
+      </div>
+      <i class="fas fa-gamepad icon" style="font-size: 3em; color: #28a745;"></i>
+      <h1><i class="fas fa-fire" style="color: #ff6b35;"></i> Fandom de Juegos <i class="fas fa-fire" style="color: #ff6b35;"></i></h1>
+      <p><i class="fas fa-eye"></i> Descubre información sobre tus juegos favoritos. <i class="fas fa-chart-line"></i> Tu visita ha sido registrada.</p>
+    </header>
+
+    <div class="search-bar">
+      <input type="text" id="searchInput" placeholder="Buscar juegos...">
+      <button onclick="searchGames()"><i class="fas fa-search"></i> Buscar</button>
+    </div>
+
+    <div class="categories">
+      <h2>Categorías</h2>
+      <div class="category-tabs">
+        <button class="category-tab active" onclick="filterCategory('all')">Todos</button>
+        <button class="category-tab" onclick="filterCategory('battle-royale')">Battle Royale</button>
+        <button class="category-tab" onclick="filterCategory('fps')">FPS</button>
+        <button class="category-tab" onclick="filterCategory('sandbox')">Sandbox</button>
+        <button class="category-tab" onclick="filterCategory('moba')">MOBA</button>
+        <button class="category-tab" onclick="filterCategory('party')">Party</button>
+        <button class="category-tab" onclick="filterCategory('action')">Action</button>
+        <button class="category-tab" onclick="filterCategory('rpg')">RPG</button>
+        <button class="category-tab" onclick="filterCategory('sports')">Sports</button>
+      </div>
+    </div>
+
+    <div class="games-grid" id="gamesGrid">
+      <!-- Juegos se cargarán aquí -->
+    </div>
+
+    <div class="game-details" id="gameDetails">
+      <button class="back-btn" onclick="showGames()"><i class="fas fa-arrow-left"></i> Volver</button>
+      <div id="gameInfo"></div>
+    </div>
+
+    <!-- Sección de Juegos Destacados -->
+    <div class="featured-section">
+      <h2><i class="fas fa-star"></i> Juegos Destacados</h2>
+      <div class="carousel">
+        <div class="carousel-container" id="featuredCarousel">
+          <!-- Juegos destacados se cargarán aquí -->
+        </div>
+        <button class="carousel-btn prev" onclick="moveCarousel(-1)">&#10094;</button>
+        <button class="carousel-btn next" onclick="moveCarousel(1)">&#10095;</button>
+      </div>
+    </div>
+
+    <!-- Sección de Reseñas -->
+    <div class="reviews-section">
+      <h2><i class="fas fa-comments"></i> Reseñas de Usuarios</h2>
+      <div class="reviews-grid">
+        <div class="review-card">
+          <div class="review-header">
+            <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=50" alt="Usuario" class="review-avatar">
+            <div>
+              <h4>Steam User - Baldur's Gate 3</h4>
+              <div class="stars">★★★★★</div>
+            </div>
+          </div>
+          <p>"This game is a masterpiece. The depth of the story, the choices you make, and the replayability are unmatched. Larian Studios has created something truly special."</p>
+        </div>
+        <div class="review-card">
+          <div class="review-header">
+            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=50" alt="Usuario" class="review-avatar">
+            <div>
+              <h4>IGN Reviewer - The Witcher 3</h4>
+              <div class="stars">★★★★★</div>
+            </div>
+          </div>
+          <p>"The Witcher 3: Wild Hunt is not just a game; it's an experience. The world is vast, the story compelling, and the gameplay addictive. A must-play for RPG fans."</p>
+        </div>
+        <div class="review-card">
+          <div class="review-header">
+            <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=50" alt="Usuario" class="review-avatar">
+            <div>
+              <h4>GameSpot User - Cyberpunk 2077</h4>
+              <div class="stars">★★★☆☆</div>
+            </div>
+          </div>
+          <p>"Despite the rocky launch, Cyberpunk 2077 has grown into an incredible game with the updates. Night City is alive, and the story is deep and engaging."</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sección de Noticias -->
+    <div class="news-section">
+      <h2><i class="fas fa-newspaper"></i> Noticias Recientes</h2>
+      <div class="news-grid">
+        <a href="https://www.ign.com/articles/baldurs-gate-3-wins-game-of-the-year-at-the-game-awards-2023" target="_blank" class="news-card">
+          <img src="https://images.unsplash.com/photo-1552820728-8b83bb6b773f?w=300" alt="Baldur's Gate 3">
+          <div class="news-content">
+            <h3>Baldur's Gate 3 Wins Game of the Year</h3>
+            <p>Larian Studios' masterpiece takes home the top prize at The Game Awards 2023, celebrating its incredible storytelling and gameplay.</p>
+            <span class="news-date">Hace 3 días</span>
+          </div>
+        </a>
+        <a href="https://www.gamespot.com/articles/starfield-gets-major-update-with-new-content/1100-6512345/" target="_blank" class="news-card">
+          <img src="https://images.unsplash.com/photo-1511512578047-dfb367046420?w=300" alt="Starfield">
+          <div class="news-content">
+            <h3>Starfield Receives Major Update</h3>
+            <p>Bethesda releases a significant update for Starfield, adding new quests, ships, and improvements to the space exploration experience.</p>
+            <span class="news-date">Hace 1 semana</span>
+          </div>
+        </a>
+        <a href="https://www.polygon.com/elden-ring/23712345/shadow-of-the-erdtree-dlc-release-date-trailer" target="_blank" class="news-card">
+          <img src="https://images.unsplash.com/photo-1614680376739-414d95ff43df?w=300" alt="Elden Ring">
+          <div class="news-content">
+            <h3>Elden Ring DLC Shadow of the Erdtree Announced</h3>
+            <p>FromSoftware reveals the highly anticipated DLC for Elden Ring, set to expand the Lands Between with new challenges and lore.</p>
+            <span class="news-date">Hace 2 semanas</span>
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <!-- Sidebar con Estadísticas -->
+    <div class="sidebar">
+      <div class="sidebar-card">
+        <h3><i class="fas fa-chart-bar"></i> Estadísticas</h3>
+        <div class="stat">
+          <span class="stat-number">25</span>
+          <span class="stat-label">Juegos en Catálogo</span>
+        </div>
+        <div class="stat">
+          <span class="stat-number">1,247</span>
+          <span class="stat-label">Visitas Hoy</span>
+        </div>
+        <div class="stat">
+          <span class="stat-number">98%</span>
+          <span class="stat-label">Satisfacción</span>
+        </div>
+      </div>
+      <div class="sidebar-card">
+        <h3><i class="fas fa-trophy"></i> Top Categorías</h3>
+        <ul class="category-list">
+          <li><span class="category-name">Battle Royale</span> <span class="category-count">8 juegos</span></li>
+          <li><span class="category-name">Sandbox</span> <span class="category-count">5 juegos</span></li>
+          <li><span class="category-name">FPS</span> <span class="category-count">6 juegos</span></li>
+          <li><span class="category-name">RPG</span> <span class="category-count">4 juegos</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+      <div class="footer-content">
+        <div class="footer-section">
+          <h3>Fandom de Juegos</h3>
+          <p>Tu fuente definitiva de información sobre videojuegos. Descubre, explora y comparte tu pasión por los juegos.</p>
+        </div>
+        <div class="footer-section">
+          <h3>Enlaces Rápidos</h3>
+          <ul>
+            <li><a href="#all">Todos los Juegos</a></li>
+            <li><a href="#battle-royale">Battle Royale</a></li>
+            <li><a href="#fps">FPS</a></li>
+            <li><a href="#sandbox">Sandbox</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h3>Síguenos</h3>
+          <div class="social-links">
+            <a href="#" class="social-link"><i class="fab fa-facebook"></i></a>
+            <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+            <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+            <a href="#" class="social-link"><i class="fab fa-youtube"></i></a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2023 Fandom de Juegos. Todos los derechos reservados.</p>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    // Registrar visita al cargar la página
+    fetch('/register-visit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' }
+    }).then(response => response.json()).then(data => {
+      console.log(data.message);
+    });
+
+    const games = [
+      {
+        id: 1,
+        title: 'Fortnite',
+        category: 'battle-royale',
+        image: 'https://images.unsplash.com/photo-1552820728-8b83bb6b773f?w=400',
+        description: 'Battle Royale épico con construcción y combates intensos.',
+        releaseYear: 2017,
+        developer: 'Epic Games',
+        players: '100',
+        rating: 4.5,
+        details: 'Fortnite es un juego gratuito de battle royale desarrollado por Epic Games. Combina elementos de construcción, saqueo y combate en tiempo real. Ha revolucionado el género con su estética cartoon y eventos en vivo.'
+      },
+      {
+        id: 2,
+        title: 'Roblox',
+        category: 'sandbox',
+        image: 'https://images.unsplash.com/photo-1511512578047-dfb367046420?w=400',
+        description: 'Plataforma de juegos creada por usuarios con miles de experiencias.',
+        releaseYear: 2006,
+        developer: 'Roblox Corporation',
+        players: 'Millones',
+        rating: 4.2,
+        details: 'Roblox es una plataforma donde los usuarios pueden crear y jugar juegos hechos por otros usuarios. Ofrece una amplia variedad de géneros y experiencias, desde aventuras hasta simuladores.'
+      },
+      {
+        id: 3,
+        title: 'Minecraft',
+        category: 'sandbox',
+        image: 'https://images.unsplash.com/photo-1614680376739-414d95ff43df?w=400',
+        description: 'Mundo abierto de bloques donde puedes construir y explorar.',
+        releaseYear: 2011,
+        developer: 'Mojang Studios',
+        players: 'Millones',
+        rating: 4.8,
+        details: 'Minecraft es un juego de sandbox que permite a los jugadores construir y explorar mundos generados proceduralmente hechos de bloques. Incluye modos creativo y supervivencia.'
+      },
+      {
+        id: 4,
+        title: 'Counter-Strike 2',
+        category: 'fps',
+        image: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=400',
+        description: 'Shooter táctico competitivo entre terroristas y contraterroristas.',
+        releaseYear: 2023,
+        developer: 'Valve',
+        players: '5v5',
+        rating: 4.6,
+        details: 'CS2 es la evolución de Counter-Strike: Global Offensive. Ofrece un shooter táctico competitivo con mapas clásicos y nuevos, enfocado en el trabajo en equipo y la estrategia.'
+      },
+      {
+        id: 5,
+        title: 'League of Legends',
+        category: 'moba',
+        image: 'https://images.unsplash.com/photo-1511512578047-dfb367046420?w=400',
+        description: 'MOBA estratégico con campeones únicos y batallas 5v5.',
+        releaseYear: 2009,
+        developer: 'Riot Games',
+        players: '5v5',
+        rating: 4.4,
+        details: 'League of Legends es un MOBA donde dos equipos de cinco jugadores luchan para destruir la base enemiga. Cada jugador controla un campeón con habilidades únicas.'
+      },
+      {
+        id: 6,
+        title: 'Apex Legends',
+        category: 'battle-royale',
+        image: 'https://images.unsplash.com/photo-1552820728-8b83bb6b773f?w=400',
+        description: 'Battle Royale con leyendas y habilidades especiales.',
+        releaseYear: 2019,
+        developer: 'Respawn Entertainment',
+        players: '60',
+        rating: 4.3,
+        details: 'Apex Legends combina battle royale con héroes de la franquicia Titanfall. Los jugadores eligen leyendas con habilidades únicas para competir en equipos de tres.'
+      },
+      {
+        id: 7,
+        title: 'Valorant',
+        category: 'fps',
+        image: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=400',
+        description: 'FPS táctico con agentes y habilidades estratégicas.',
+        releaseYear: 2020,
+        developer: 'Riot Games',
+        players: '5v5',
+        rating: 4.7,
+        details: 'Valorant es un shooter táctico en primera persona desarrollado por Riot Games. Combina precisión de disparo con habilidades únicas de agentes en un entorno competitivo.'
+      },
+      {
+        id: 8,
+        title: 'Among Us',
+        category: 'party',
+        image: 'https://images.unsplash.com/photo-1511512578047-dfb367046420?w=400',
+        description: 'Juego de deducción social con impostores y tripulación.',
+        releaseYear: 2018,
+        developer: 'InnerSloth',
+        players: '4-15',
+        rating: 4.1,
+        details: 'Among Us es un juego multijugador donde los jugadores deben completar tareas mientras identifican a los impostores entre ellos. Perfecto para juegos sociales.'
+      },
+      {
+        id: 9,
+        title: 'Grand Theft Auto V',
+        category: 'action',
+        image: 'https://images.unsplash.com/photo-1552820728-8b83bb6b773f?w=400',
+        description: 'Mundo abierto con crimen, acción y misiones épicas.',
+        releaseYear: 2013,
+        developer: 'Rockstar Games',
+        players: '1-30',
+        rating: 4.8,
+        details: 'GTA V ofrece un mundo abierto masivo en Los Santos, con historias de tres protagonistas criminales. Incluye modo online con GTA Online.'
+      },
+      {
+        id: 10,
+        title: 'The Witcher 3: Wild Hunt',
+        category: 'rpg',
+        image: 'https://images.unsplash.com/photo-1614680376739-414d95ff43df?w=400',
+        description: 'RPG épico con caza de monstruos y decisiones morales.',
+        releaseYear: 2015,
+        developer: 'CD Projekt Red',
+        players: '1',
+        rating: 4.9,
+        details: 'The Witcher 3 es un RPG de mundo abierto donde juegas como Geralt de Rivia cazando monstruos y tomando decisiones que afectan el mundo.'
+      },
+      {
+        id: 11,
+        title: 'Cyberpunk 2077',
+        category: 'rpg',
+        image: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=400',
+        description: 'RPG futurista con ciberpunk y elecciones profundas.',
+        releaseYear: 2020,
+        developer: 'CD Projekt Red',
+        players: '1',
+        rating: 4.0,
+        details: 'Cyberpunk 2077 es un RPG de mundo abierto ambientado en Night City, con historia ramificada y personalización profunda de personajes.'
+      },
+      {
+        id: 12,
+        title: 'Call of Duty: Warzone',
+        category: 'battle-royale',
+        image: 'https://images.unsplash.com/photo-1552820728-8b83bb6b773f?w=400',
+        description: 'Battle Royale gratuito con mapas masivos.',
+        releaseYear: 2020,
+        developer: 'Activision',
+        players: '150',
+        rating: 4.2,
+        details: 'Warzone es el battle royale gratuito de Call of Duty, con mapas grandes y modos de juego variados, incluyendo resurrección.'
+      },
+      {
+        id: 13,
+        title: 'FIFA 23',
+        category: 'sports',
+        image: 'https://images.unsplash.com/photo-1511512578047-dfb367046420?w=400',
+        description: 'Simulador de fútbol con modos carrera y Ultimate Team.',
+        releaseYear: 2022,
+        developer: 'EA Sports',
+        players: '1-22',
+        rating: 4.3,
+        details: 'FIFA 23 ofrece la experiencia más realista del fútbol, con modos de carrera, Ultimate Team y partidos online competitivos.'
+      },
+      {
+        id: 14,
+        title: 'Overwatch 2',
+        category: 'fps',
+        image: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=400',
+        description: 'Shooter por equipos con héroes únicos.',
+        releaseYear: 2022,
+        developer: 'Blizzard Entertainment',
+        players: '5v5',
+        rating: 4.1,
+        details: 'Overwatch 2 es la secuela del shooter por equipos, con nuevos héroes, mapas y modo historia Push.'
+      },
+      {
+        id: 15,
+        title: 'Rocket League',
+        category: 'sports',
+        image: 'https://images.unsplash.com/photo-1511512578047-dfb367046420?w=400',
+        description: 'Fútbol con coches en un campo de fútbol.',
+        releaseYear: 2015,
+        developer: 'Psyonix',
+        players: '1-8',
+        rating: 4.5,
+        details: 'Rocket League combina fútbol con física de vehículos, ofreciendo partidos emocionantes y modos creativos.'
+      },
+      {
+        id: 16,
+        title: 'Call of Duty: Modern Warfare',
+        category: 'fps',
+        image: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=400',
+        description: 'Shooter en primera persona con campaña intensa y multijugador.',
+        releaseYear: 2019,
+        developer: 'Activision',
+        players: '1-100',
+        rating: 4.4,
+        details: 'Modern Warfare ofrece una campaña narrativa profunda y modos multijugador competitivos con mapas variados y modos de juego innovadores.'
+      },
+      {
+        id: 17,
+        title: 'PUBG',
+        category: 'battle-royale',
+        image: 'https://images.unsplash.com/photo-1552820728-8b83bb6b773f?w=400',
+        description: 'Battle Royale original con 100 jugadores en una isla.',
+        releaseYear: 2017,
+        developer: 'PUBG Corporation',
+        players: '100',
+        rating: 4.2,
+        details: 'PlayerUnknown\'s Battlegrounds es el pionero del género battle royale, donde los jugadores luchan hasta ser el último en pie en un mapa masivo.'
+      },
+      {
+        id: 18,
+        title: 'The Elder Scrolls V: Skyrim',
+        category: 'rpg',
+        image: 'https://images.unsplash.com/photo-1614680376739-414d95ff43df?w=400',
+        description: 'RPG de mundo abierto en un mundo de fantasía épico.',
+        releaseYear: 2011,
+        developer: 'Bethesda Game Studios',
+        players: '1',
+        rating: 4.9,
+        details: 'Skyrim permite explorar un vasto mundo de fantasía, completar misiones, luchar contra dragones y personalizar tu personaje con magia y habilidades.'
+      },
+      {
+        id: 19,
+        title: 'Red Dead Redemption 2',
+        category: 'action',
+        image: 'https://images.unsplash.com/photo-1552820728-8b83bb6b773f?w=400',
+        description: 'Mundo abierto en el Viejo Oeste con historia profunda.',
+        releaseYear: 2018,
+        developer: 'Rockstar Studios',
+        players: '1',
+        rating: 4.9,
+        details: 'RDR2 narra la historia de Arthur Morgan en el declive de los forajidos, con caza, tiroteos y decisiones morales en un mundo abierto impresionante.'
+      },
+      {
+        id: 20,
+        title: 'NBA 2K23',
+        category: 'sports',
+        image: 'https://images.unsplash.com/photo-1511512578047-dfb367046420?w=400',
+        description: 'Simulador de baloncesto con modos carrera y MyTeam.',
+        releaseYear: 2022,
+        developer: 'Visual Concepts',
+        players: '1-10',
+        rating: 4.4,
+        details: 'NBA 2K23 ofrece la experiencia más realista del baloncesto, con modos de carrera, MyTeam y partidos online competitivos.'
+      },
+      {
+        id: 21,
+        title: 'Dota 2',
+        category: 'moba',
+        image: 'https://images.unsplash.com/photo-1511512578047-dfb367046420?w=400',
+        description: 'MOBA competitivo con estrategia profunda y héroes únicos.',
+        releaseYear: 2013,
+        developer: 'Valve',
+        players: '5v5',
+        rating: 4.6,
+        details: 'Dota 2 es un MOBA gratuito donde dos equipos de cinco jugadores compiten para destruir la base enemiga usando héroes con habilidades especiales.'
+      },
+      {
+        id: 22,
+        title: 'Fall Guys',
+        category: 'party',
+        image: 'https://images.unsplash.com/photo-1511512578047-dfb367046420?w=400',
+        description: 'Juego de batalla real con obstáculos divertidos.',
+        releaseYear: 2020,
+        developer: 'Mediatonic',
+        players: '60',
+        rating: 4.3,
+        details: 'Fall Guys es un battle royale caótico donde los jugadores compiten en rondas de obstáculos físicos para ser el último en pie.'
+      },
+      {
+        id: 23,
+        title: 'Assassin\'s Creed Valhalla',
+        category: 'rpg',
+        image: 'https://images.unsplash.com/photo-1614680376739-414d95ff43df?w=400',
+        description: 'RPG de acción con vikingos y exploración histórica.',
+        releaseYear: 2020,
+        developer: 'Ubisoft',
+        players: '1',
+        rating: 4.5,
+        details: 'Valhalla te pone en el rol de un vikingo invasor en Inglaterra, con combate, exploración y construcción de asentamientos.'
+      },
+      {
+        id: 24,
+        title: 'Spider-Man',
+        category: 'action',
+        image: 'https://images.unsplash.com/photo-1552820728-8b83bb6b773f?w=400',
+        description: 'Aventura de superhéroe con mecánicas de swing y combate.',
+        releaseYear: 2018,
+        developer: 'Insomniac Games',
+        players: '1',
+        rating: 4.8,
+        details: 'Experimenta la vida de Spider-Man en Nueva York, balanceando la vida cotidiana con la lucha contra el crimen usando habilidades arácnidas.'
+      },
+      {
+        id: 25,
+        title: 'Mario Party Superstars',
+        category: 'party',
+        image: 'https://images.unsplash.com/photo-1511512578047-dfb367046420?w=400',
+        description: 'Juego de fiesta con minijuegos clásicos de Mario.',
+        releaseYear: 2021,
+        developer: 'Nintendo',
+        players: '1-4',
+        rating: 4.2,
+        details: 'Mario Party Superstars reúne los mejores minijuegos de la serie en tableros divertidos para competir con amigos.'
+      }
+    ];
+
+    let currentCategory = 'all';
+
+    function renderGames(filteredGames = games) {
+      const grid = document.getElementById('gamesGrid');
+      grid.innerHTML = filteredGames.map(game => `
+        <div class="game-card" onclick="showGameDetails(${game.id})">
+          <div class="game-image" style="background-image: url('${game.image}')"></div>
+          <div class="game-content">
+            <h3>${game.title}</h3>
+            <p>${game.description}</p>
+            <div class="game-meta">
+              <span><i class="fas fa-calendar"></i> ${game.releaseYear}</span>
+              <span><i class="fas fa-users"></i> ${game.players}</span>
+              <span><i class="fas fa-star"></i> ${game.rating}</span>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function filterCategory(category) {
+      currentCategory = category;
+      document.querySelectorAll('.category-tab').forEach(tab => tab.classList.remove('active'));
+      event.target.classList.add('active');
+      
+      const filtered = category === 'all' ? games : games.filter(game => game.category === category);
+      renderGames(filtered);
+    }
+
+    function searchGames() {
+      const query = document.getElementById('searchInput').value.toLowerCase();
+      const filtered = games.filter(game => 
+        game.title.toLowerCase().includes(query) || 
+        game.description.toLowerCase().includes(query) ||
+        game.developer.toLowerCase().includes(query)
+      );
+      renderGames(filtered);
+    }
+
+    function showGameDetails(id) {
+      const game = games.find(g => g.id === id);
+      document.getElementById('gameInfo').innerHTML = `
+        <div style="display: flex; gap: 30px; align-items: flex-start;">
+          <img src="${game.image}" style="width: 300px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+          <div style="flex: 1;">
+            <h2>${game.title}</h2>
+            <p><strong>Desarrollador:</strong> ${game.developer}</p>
+            <p><strong>Año de lanzamiento:</strong> ${game.releaseYear}</p>
+            <p><strong>Jugadores:</strong> ${game.players}</p>
+            <p><strong>Calificación:</strong> ${game.rating}/5 <i class="fas fa-star" style="color: gold;"></i></p>
+            <p><strong>Categoría:</strong> ${game.category.replace('-', ' ').toUpperCase()}</p>
+            <p style="margin-top: 20px; line-height: 1.6;">${game.details}</p>
+          </div>
+        </div>
+      `;
+      document.getElementById('gamesGrid').style.display = 'none';
+      document.getElementById('gameDetails').classList.add('active');
+    }
+
+    function showGames() {
+      document.getElementById('gameDetails').classList.remove('active');
+      document.getElementById('gamesGrid').style.display = 'grid';
+    }
+
+    // Inicializar
+    renderGames();
+    renderFeaturedGames();
+    updateStats();
+
+    function renderFeaturedGames() {
+      const featuredGames = games.filter(game => game.rating >= 4.5).slice(0, 5); // Top 5 juegos con rating >= 4.5
+      const carousel = document.getElementById('featuredCarousel');
+      carousel.innerHTML = featuredGames.map(game => `
+        <div class="carousel-item">
+          <div class="game-card" onclick="showGameDetails(${game.id})">
+            <div class="game-image" style="background-image: url('${game.image}')"></div>
+            <div class="game-content">
+              <h3>${game.title}</h3>
+              <p>${game.description}</p>
+              <div class="game-meta">
+                <span><i class="fas fa-calendar"></i> ${game.releaseYear}</span>
+                <span><i class="fas fa-users"></i> ${game.players}</span>
+                <span><i class="fas fa-star"></i> ${game.rating}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    let currentSlide = 0;
+    function moveCarousel(direction) {
+      const carousel = document.querySelector('.carousel-container');
+      const items = document.querySelectorAll('.carousel-item');
+      const totalItems = items.length;
+      currentSlide = (currentSlide + direction + totalItems) % totalItems;
+      carousel.style.transform = `translateX(-${currentSlide * 100}%)`;
+    }
+
+    function updateStats() {
+      // Actualizar estadísticas dinámicamente
+      document.querySelector('.stat-number').textContent = games.length;
+      // Otras estadísticas pueden ser actualizadas si hay datos dinámicos
+    }
+
+    function toggleSidebar() {
+      const sidebar = document.querySelector('.sidebar');
+      sidebar.classList.toggle('hidden');
+    }
+  </script>
+</body>
+</html>
