@@ -737,6 +737,60 @@
       color: #666;
     }
 
+    /* Modal Styles */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0,0,0,0.8);
+      animation: fadeIn 0.3s ease-out;
+    }
+    .modal-content {
+      background-color: rgba(255,255,255,0.95);
+      margin: 10% auto;
+      padding: 20px;
+      border: 1px solid #888;
+      width: 80%;
+      max-width: 600px;
+      border-radius: 20px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+      backdrop-filter: blur(10px);
+      animation: slideIn 0.5s ease-out;
+    }
+    body.light-mode .modal-content {
+      background-color: rgba(10,10,10,0.95);
+      color: #e0e0e0;
+    }
+    .close {
+      color: #aaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .close:hover,
+    .close:focus {
+      color: black;
+      text-decoration: none;
+    }
+    body.light-mode .close:hover,
+    body.light-mode .close:focus {
+      color: white;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    @keyframes slideIn {
+      from { transform: translateY(-50px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
     /* Responsive */
     @media (max-width: 768px) {
       .sidebar {
@@ -967,7 +1021,11 @@
         developer: 'Epic Games',
         players: '100',
         rating: 4.5,
-        details: 'Fortnite es un juego gratuito de battle royale desarrollado por Epic Games. Combina elementos de construcción, saqueo y combate en tiempo real. Ha revolucionado el género con su estética cartoon y eventos en vivo.'
+        details: 'Fortnite es un juego gratuito de battle royale desarrollado por Epic Games. Combina elementos de construcción, saqueo y combate en tiempo real. Ha revolucionado el género con su estética cartoon y eventos en vivo.',
+        requirements: {
+          minimum: 'OS: Windows 7/8/10 (64-bit), Processor: Intel Core i3-3225 or AMD FX-6350, Memory: 8 GB RAM, Graphics: Intel HD 4000 or AMD Radeon R5 200',
+          recommended: 'OS: Windows 10 (64-bit), Processor: Intel Core i5-7300HQ or AMD Ryzen 3 3200G, Memory: 16 GB RAM, Graphics: NVIDIA GeForce GTX 960 or AMD Radeon RX 470'
+        }
       },
       {
         id: 2,
