@@ -299,29 +299,33 @@
       color: #00ffff;
       font-size: 1.3em;
       font-weight: 600;
-      text-shadow: 0 0 10px rgba(0,255,255,0.5);
+      text-shadow: 0 0 15px rgba(0,255,255,0.8), 0 0 30px rgba(0,255,255,0.4);
     }
     .game-content p {
       margin: 0 0 18px;
       line-height: 1.6;
-      color: #e0e0e0;
+      color: #ffffff;
+      text-shadow: 0 0 5px rgba(255,255,255,0.3);
     }
     .game-meta {
       display: flex;
       justify-content: space-between;
       font-size: 0.9em;
-      color: #777;
-      border-top: 1px solid #eee;
+      color: #cccccc;
+      border-top: 1px solid rgba(255,255,255,0.2);
       padding-top: 15px;
     }
     .game-meta span {
       display: flex;
       align-items: center;
       font-weight: 500;
+      color: #ff00ff;
+      text-shadow: 0 0 5px rgba(255,0,255,0.5);
     }
     .game-meta i {
       margin-right: 6px;
-      color: #007bff;
+      color: #00ffff;
+      text-shadow: 0 0 5px rgba(0,255,255,0.5);
     }
     .categories {
       margin-bottom: 40px;
@@ -745,7 +749,7 @@
     }
   </style>
 </head>
-<body>
+<body class="light-mode">
   <button class="sidebar-toggle" onclick="toggleSidebar()" title="Toggle Estadísticas"><i class="fas fa-chart-bar"></i></button>
 
     <div class="container">
@@ -1922,6 +1926,21 @@
         }
       },
       {
+        id: 69,
+        title: '7 Days to Die',
+        category: 'sandbox',
+        image: 'https://images.unsplash.com/photo-1552820728-8b83bb6b773f?w=400',
+        description: 'Supervivencia zombie con construcción.',
+        releaseYear: 2013,
+        developer: 'The Fun Pimps',
+        players: '1-64',
+        rating: 4.2,
+        details: 'Sobrevive 7 días contra zombies, construye bases y explora en un mundo postapocalíptico.',
+        requirements: {
+          minimum: 'OS: Windows 7 (64-bit), Processor: Dual Core 2.4 GHz, Memory: 4 GB RAM, Graphics: 1 GB VRAM',
+          recommended: 'OS: Windows 10 (64-bit), Processor: Quad Core 3.0 GHz, Memory: 8 GB RAM, Graphics: 2 GB VRAM'
+        }
+      }
     ];
 
     let currentCategory = 'all';
