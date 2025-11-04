@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -52,11 +53,12 @@
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       margin: 0;
       padding: 0;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: #333;
+      background: linear-gradient(135deg, #0a0a0a 0%, #1a0033 50%, #2d1b69 100%);
+      color: #e0e0e0;
       min-height: 100vh;
       position: relative;
       overflow-x: hidden;
+      transition: background 0.5s ease, color 0.5s ease;
     }
     body::before {
       content: '';
@@ -65,8 +67,20 @@
       left: 0;
       right: 0;
       bottom: 0;
-      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="%23ffffff" opacity="0.03"/><circle cx="75" cy="75" r="1" fill="%23ffffff" opacity="0.03"/><circle cx="50" cy="10" r="0.5" fill="%23ffffff" opacity="0.02"/><circle cx="10" cy="50" r="0.5" fill="%23ffffff" opacity="0.02"/><circle cx="90" cy="30" r="0.5" fill="%23ffffff" opacity="0.02"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="2" fill="%23ff00ff" opacity="0.05"/><circle cx="75" cy="75" r="2" fill="%2300ffff" opacity="0.05"/><circle cx="50" cy="10" r="1" fill="%23ff0080" opacity="0.03"/><circle cx="10" cy="50" r="1" fill="%238000ff" opacity="0.03"/><circle cx="90" cy="30" r="1" fill="%2300ff80" opacity="0.03"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
       pointer-events: none;
+      animation: grainMove 20s ease-in-out infinite;
+    }
+    @keyframes grainMove {
+      0%, 100% { transform: translate(0, 0); }
+      50% { transform: translate(-10px, -10px); }
+    }
+    body.light-mode {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #333;
+    }
+    body.light-mode::before {
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="%23ffffff" opacity="0.03"/><circle cx="75" cy="75" r="1" fill="%23ffffff" opacity="0.03"/><circle cx="50" cy="10" r="0.5" fill="%23ffffff" opacity="0.02"/><circle cx="10" cy="50" r="0.5" fill="%23ffffff" opacity="0.02"/><circle cx="90" cy="30" r="0.5" fill="%23ffffff" opacity="0.02"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
     }
     .container {
       max-width: 1200px;
@@ -78,19 +92,36 @@
     header {
       text-align: center;
       padding: 40px 30px;
-      background: rgba(255,255,255,0.95);
+      background: rgba(10,10,10,0.9);
       border-radius: 20px;
       margin-bottom: 30px;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+      box-shadow: 0 10px 40px rgba(255,0,255,0.3);
       backdrop-filter: blur(10px);
-      border: 1px solid rgba(255,255,255,0.2);
+      border: 2px solid rgba(255,0,255,0.5);
+      position: relative;
+      overflow: hidden;
+    }
+    header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(45deg, rgba(255,0,255,0.1), rgba(0,255,255,0.1));
+      animation: headerGlow 3s ease-in-out infinite alternate;
+    }
+    @keyframes headerGlow {
+      0% { opacity: 0.3; }
+      100% { opacity: 0.7; }
     }
     header .icon {
       font-size: 4em;
-      color: #007bff;
+      color: #ff00ff;
       margin-bottom: 15px;
-      text-shadow: 0 2px 10px rgba(0,123,255,0.3);
+      text-shadow: 0 0 20px rgba(255,0,255,0.8);
       animation: pulse 2s infinite;
+      filter: drop-shadow(0 0 10px #ff00ff);
     }
     @keyframes pulse {
       0%, 100% { transform: scale(1); }
@@ -99,18 +130,23 @@
     header h1 {
       margin: 0;
       font-size: 3em;
-      color: #007bff;
-      background: linear-gradient(135deg, #007bff, #6610f2);
+      color: #00ffff;
+      background: linear-gradient(135deg, #ff00ff, #00ffff, #8000ff);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
       font-weight: 700;
+      text-shadow: 0 0 20px rgba(0,255,255,0.5);
+      position: relative;
+      z-index: 2;
     }
     header p {
       margin: 15px 0 0;
       font-size: 1.2em;
-      color: #666;
+      color: #e0e0e0;
       font-weight: 300;
+      position: relative;
+      z-index: 2;
     }
     .search-bar {
       margin-bottom: 40px;
@@ -160,13 +196,13 @@
       margin-bottom: 40px;
     }
     .game-card {
-      background: rgba(255,255,255,0.95);
+      background: rgba(10,10,10,0.9);
       border-radius: 20px;
       overflow: hidden;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+      box-shadow: 0 10px 40px rgba(255,0,255,0.3);
       transition: all 0.4s ease;
       backdrop-filter: blur(10px);
-      border: 1px solid rgba(255,255,255,0.2);
+      border: 2px solid rgba(255,0,255,0.5);
       cursor: pointer;
       position: relative;
     }
@@ -177,13 +213,14 @@
       left: 0;
       right: 0;
       bottom: 0;
-      background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0));
+      background: linear-gradient(135deg, rgba(255,0,255,0.1), rgba(0,255,255,0.1));
       opacity: 0;
       transition: opacity 0.3s ease;
     }
     .game-card:hover {
       transform: translateY(-8px) scale(1.02);
-      box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+      box-shadow: 0 20px 60px rgba(255,0,255,0.5);
+      border-color: rgba(0,255,255,0.8);
     }
     .game-card:hover::before {
       opacity: 1;
@@ -1157,6 +1194,114 @@
         players: '1-4',
         rating: 4.2,
         details: 'Mario Party Superstars reúne los mejores minijuegos de la serie en tableros divertidos para competir con amigos.'
+      },
+      {
+        id: 26,
+        title: 'Hades',
+        category: 'action',
+        image: 'https://images.unsplash.com/photo-1552820728-8b83bb6b773f?w=400',
+        description: 'Roguelike con mitología griega y combate rápido.',
+        releaseYear: 2020,
+        developer: 'Supergiant Games',
+        players: '1',
+        rating: 4.9,
+        details: 'Hades es un roguelike isométrico donde juegas como Zagreus intentando escapar del inframundo, con combate frenético y narrativa profunda.'
+      },
+      {
+        id: 27,
+        title: 'Stardew Valley',
+        category: 'sandbox',
+        image: 'https://images.unsplash.com/photo-1614680376739-414d95ff43df?w=400',
+        description: 'Simulador de granja con elementos RPG.',
+        releaseYear: 2016,
+        developer: 'ConcernedApe',
+        players: '1',
+        rating: 4.8,
+        details: 'Stardew Valley es un simulador de granja donde heredas una propiedad y cultivas, pescas, minas y construyes relaciones con los aldeanos.'
+      },
+      {
+        id: 28,
+        title: 'The Legend of Zelda: Breath of the Wild',
+        category: 'action',
+        image: 'https://images.unsplash.com/photo-1552820728-8b83bb6b773f?w=400',
+        description: 'Aventura épica en un mundo abierto de Hyrule.',
+        releaseYear: 2017,
+        developer: 'Nintendo',
+        players: '1',
+        rating: 4.9,
+        details: 'Breath of the Wild ofrece libertad total en Hyrule, con exploración, puzzles, combate y la historia de Link contra Calamity Ganon.'
+      },
+      {
+        id: 29,
+        title: 'Portal 2',
+        category: 'action',
+        image: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=400',
+        description: 'Puzzle con portales y humor inteligente.',
+        releaseYear: 2011,
+        developer: 'Valve',
+        players: '1',
+        rating: 4.8,
+        details: 'Portal 2 es un juego de puzzles donde usas un dispositivo de portales para resolver desafíos, con una historia humorística y cooperativo.'
+      },
+      {
+        id: 30,
+        title: 'Hollow Knight',
+        category: 'action',
+        image: 'https://images.unsplash.com/photo-1614680376739-414d95ff43df?w=400',
+        description: 'Metroidvania con exploración y combate desafiante.',
+        releaseYear: 2017,
+        developer: 'Team Cherry',
+        players: '1',
+        rating: 4.7,
+        details: 'Hollow Knight es un metroidvania 2D donde exploras un mundo subterráneo infectado, luchas contra jefes y descubres secretos.'
+      },
+      {
+        id: 31,
+        title: 'Celeste',
+        category: 'action',
+        image: 'https://images.unsplash.com/photo-1552820728-8b83bb6b773f?w=400',
+        description: 'Plataforma con narrativa sobre salud mental.',
+        releaseYear: 2018,
+        developer: 'Matt Makes Games',
+        players: '1',
+        rating: 4.6,
+        details: 'Celeste sigue a Madeline escalando la montaña Celeste, enfrentando desafíos físicos y emocionales en un juego de plataformas preciso.'
+      },
+      {
+        id: 32,
+        title: 'Undertale',
+        category: 'rpg',
+        image: 'https://images.unsplash.com/photo-1614680376739-414d95ff43df?w=400',
+        description: 'RPG con combate único y elecciones morales.',
+        releaseYear: 2015,
+        developer: 'Toby Fox',
+        players: '1',
+        rating: 4.8,
+        details: 'Undertale es un RPG donde puedes elegir pelear o mostrar misericordia a los monstruos, con múltiples finales basados en tus acciones.'
+      },
+      {
+        id: 33,
+        title: 'Dead Cells',
+        category: 'action',
+        image: 'https://images.unsplash.com/photo-1552820728-8b83bb6b773f?w=400',
+        description: 'Roguelike con combate metroidvania.',
+        releaseYear: 2018,
+        developer: 'Motion Twin',
+        players: '1',
+        rating: 4.5,
+        details: 'Dead Cells combina roguelike con metroidvania, donde mejoras permanentemente tu personaje en corridas procedurales.'
+      },
+      {
+        id: 34,
+        title: 'Slay the Spire',
+        category: 'rpg',
+        image: 'https://images.unsplash.com/photo-1614680376739-414d95ff43df?w=400',
+        description: 'Juego de cartas roguelike.',
+        releaseYear: 2019,
+        developer: 'Mega Crit',
+        players: '1',
+        rating: 4.7,
+        details: 'Slay the Spire es un juego de cartas donde construyes mazos para derrotar jefes en un roguelike estratégico.'
       }
     ];
 
